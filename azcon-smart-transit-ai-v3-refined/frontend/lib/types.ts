@@ -1,0 +1,48 @@
+export type Locale = 'az' | 'en' | 'tr';
+export type Role = 'admin' | 'user';
+export type TransportType = 'bus' | 'metro' | 'taxi' | 'rail';
+
+export interface User {
+  id: string;
+  name: string;
+  surname?: string;
+  email: string;
+  role: Role;
+  preferredLanguage?: Locale;
+  avatar?: string;
+  theme?: string;
+}
+
+export interface RouteItem {
+  id: string;
+  code?: string;
+  name: string;
+  corridor: string;
+  occupancy: number;
+  delayRisk: 'low' | 'medium' | 'high';
+  status: 'on-time' | 'monitoring' | 'delayed';
+  trend: number[];
+  etaVariance: number;
+  transportType?: TransportType;
+  origin?: string;
+  destination?: string;
+  capacity?: number;
+  avgDelayMinutes?: number;
+  crowded?: boolean;
+}
+
+export interface AlertItem {
+  id: string;
+  title: string;
+  severity: 'low' | 'medium' | 'high';
+  message: string;
+  createdAt: string;
+}
+
+export interface PredictionCardData {
+  routeId: string;
+  passengerFlow: number;
+  occupancyForecast: number;
+  delayRiskScore: number;
+  recommendation: string;
+}

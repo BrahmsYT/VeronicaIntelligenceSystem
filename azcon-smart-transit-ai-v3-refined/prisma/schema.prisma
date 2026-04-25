@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+  user
+}
+
+model User {
+  id                String   @id @default(cuid())
+  name              String
+  email             String   @unique
+  passwordHash      String
+  role              Role     @default(user)
+  preferredLanguage String   @default("az")
+  createdAt         DateTime @default(now())
+  recommendations   Recommendation[]
+}
+
+model Route {
+  id             String         @id @default(cuid())
+  code           String         @unique
+  name           String
+  corridor       String
+  status         String
+  occupancyLogs  OccupancyLog[]
+  predictions    Prediction[]
+  alerts         Alert[]
+}
+
+model OccupancyLog {
+  id         String   @id @default(cuid())
+  routeId    String
+  occupancy  Int
+  passengerFlow Int
+  recordedAt DateTime @default(now())
+  route       Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
+}
+
+model Prediction {
+  id                String   @id @default(cuid())
+  routeId           String
+  passengerFlow     Int
+  occupancyForecast Int
+  delayRiskScore    Float
+  createdAt         DateTime @default(now())
+  route             Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
+}
+
+model Recommendation {
+  id        String   @id @default(cuid())
+  userId    String
+  routeCode String
+  reason    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Alert {
+  id        String   @id @default(cuid())
+  routeId    String
+  severity  String
+  title     String
+  message   String
+  createdAt DateTime @default(now())
+  route     Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
+}

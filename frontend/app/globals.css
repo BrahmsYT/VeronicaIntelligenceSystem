@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #020617;
+  --bg-alt: #0f172a;
+  --text: #e5eefc;
+  --muted: #94a3b8;
+  --panel: rgba(255,255,255,0.06);
+  --panel-strong: rgba(255,255,255,0.1);
+  --border: rgba(255,255,255,0.12);
+  --brand-from: #2563eb;
+  --brand-to: #0ea5e9;
+  --glow: rgba(59,130,246,0.2);
+}
+
+html[data-theme='light'] {
+  --bg: #eef4ff;
+  --bg-alt: #ffffff;
+  --text: #0f172a;
+  --muted: #475569;
+  --panel: rgba(255,255,255,0.75);
+  --panel-strong: rgba(255,255,255,0.92);
+  --border: rgba(15,23,42,0.08);
+  --brand-from: #2563eb;
+  --brand-to: #06b6d4;
+  --glow: rgba(37,99,235,0.1);
+}
+
+html[data-theme='dark'] {
+  --bg: #020617;
+  --bg-alt: #111827;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --panel: rgba(255,255,255,0.05);
+  --panel-strong: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.1);
+  --brand-from: #2563eb;
+  --brand-to: #38bdf8;
+  --glow: rgba(56,189,248,0.12);
+}
+
+html[data-theme='ocean'] {
+  --bg: #031420;
+  --bg-alt: #06283d;
+  --text: #dff7ff;
+  --muted: #93c5d8;
+  --panel: rgba(15,118,110,0.12);
+  --panel-strong: rgba(14,165,233,0.16);
+  --border: rgba(125,211,252,0.18);
+  --brand-from: #0891b2;
+  --brand-to: #22d3ee;
+  --glow: rgba(34,211,238,0.16);
+}
+
+html[data-theme='neon'] {
+  --bg: #0a0614;
+  --bg-alt: #130922;
+  --text: #f5ecff;
+  --muted: #c4b5fd;
+  --panel: rgba(168,85,247,0.12);
+  --panel-strong: rgba(14,165,233,0.14);
+  --border: rgba(196,181,253,0.22);
+  --brand-from: #8b5cf6;
+  --brand-to: #22d3ee;
+  --glow: rgba(139,92,246,0.22);
+}
+
+html[data-theme='lava'] {
+  --bg: #170806;
+  --bg-alt: #2a0e0a;
+  --text: #fff1e8;
+  --muted: #fdba74;
+  --panel: rgba(234,88,12,0.11);
+  --panel-strong: rgba(251,146,60,0.14);
+  --border: rgba(253,186,116,0.18);
+  --brand-from: #dc2626;
+  --brand-to: #f97316;
+  --glow: rgba(249,115,22,0.18);
+}
+
+body {
+  @apply antialiased;
+  color: var(--text);
+  background: radial-gradient(circle at top, var(--glow), transparent 32%), linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 60%, var(--bg) 100%);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--muted) 45%, transparent) transparent;
+}
+
+.glass {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(18px);
+}
+
+.text-gradient {
+  background-image: linear-gradient(90deg, color-mix(in srgb, var(--text) 92%, white), var(--brand-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.page-shell {
+  @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+.soft-text { color: var(--muted); }
+.panel-strong { background: var(--panel-strong); }

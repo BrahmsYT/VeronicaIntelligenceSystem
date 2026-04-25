@@ -1,0 +1,177 @@
+{
+  "users": [
+    {
+      "id": "u1",
+      "name": "Aysel",
+      "surname": "Mammadova",
+      "email": "admin@azcon.ai",
+      "password": "Admin123!",
+      "role": "admin",
+      "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
+      "theme": "neon",
+      "preferredTransport": "metro"
+    },
+    {
+      "id": "u2",
+      "name": "Murad",
+      "surname": "Aliyev",
+      "email": "user@azcon.ai",
+      "password": "User123!",
+      "role": "user",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+      "theme": "ocean",
+      "preferredTransport": "bus"
+    }
+  ],
+  "routes": [
+    {
+      "id": "r1",
+      "code": "BUS-88A",
+      "name": "Ahmadli - 28 May",
+      "transportType": "bus",
+      "origin": "Ahmadli",
+      "destination": "28 May",
+      "status": "busy",
+      "occupancy": 91,
+      "delayRisk": "high",
+      "capacity": 130,
+      "avgDelayMinutes": 11,
+      "crowded": true
+    },
+    {
+      "id": "r2",
+      "code": "METRO-01",
+      "name": "Koroglu - Icherisheher",
+      "transportType": "metro",
+      "origin": "Koroglu",
+      "destination": "Icherisheher",
+      "status": "stable",
+      "occupancy": 74,
+      "delayRisk": "low",
+      "capacity": 1100,
+      "avgDelayMinutes": 2,
+      "crowded": false
+    },
+    {
+      "id": "r3",
+      "code": "RAIL-X1",
+      "name": "Baku - Sumgayit",
+      "transportType": "rail",
+      "origin": "Baku",
+      "destination": "Sumgayit",
+      "status": "stable",
+      "occupancy": 58,
+      "delayRisk": "low",
+      "capacity": 900,
+      "avgDelayMinutes": 3,
+      "crowded": false
+    },
+    {
+      "id": "r4",
+      "code": "TAXI-CITY",
+      "name": "Airport Connector",
+      "transportType": "taxi",
+      "origin": "Koroglu",
+      "destination": "Airport",
+      "status": "watch",
+      "occupancy": 63,
+      "delayRisk": "medium",
+      "capacity": 4,
+      "avgDelayMinutes": 7,
+      "crowded": false
+    }
+  ],
+  "predictions": [
+    {
+      "id": "p1",
+      "routeId": "r1",
+      "passengerFlow": 1280,
+      "occupancyForecast": 94,
+      "delayRisk": "high",
+      "generatedAt": "2026-04-21T08:00:00Z"
+    }
+  ],
+  "recommendations": [
+    {
+      "id": "rec1",
+      "title": "Shift to metro",
+      "description": "Use metro on east-west corridor to avoid bus crowding.",
+      "confidence": 0.91,
+      "audience": "user"
+    },
+    {
+      "id": "rec2",
+      "title": "Deploy reserve buses",
+      "description": "Add 3 reserve buses to BUS-88A at peak time.",
+      "confidence": 0.88,
+      "audience": "admin"
+    }
+  ],
+  "alerts": [
+    {
+      "id": "a1",
+      "title": "Crowding spike on BUS-88A",
+      "severity": "critical",
+      "description": "Occupancy exceeded 90% for two intervals.",
+      "createdAt": "2026-04-21T07:30:00Z"
+    }
+  ],
+  "team": [
+    {
+      "id": "t1",
+      "name": "Nigar",
+      "surname": "Huseynova",
+      "role": "Chief Transit AI Officer",
+      "image": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80",
+      "bio": "Leads predictive mobility operations."
+    },
+    {
+      "id": "t2",
+      "name": "Rauf",
+      "surname": "Quliyev",
+      "role": "Network Operations Lead",
+      "image": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80",
+      "bio": "Monitors route health and dispatch."
+    }
+  ],
+  "institutions": [
+    {
+      "id": "i1",
+      "name": "AZAL",
+      "category": "aviation",
+      "description": "National carrier with 50+ routes."
+    },
+    {
+      "id": "i2",
+      "name": "BakuBus",
+      "category": "bus",
+      "description": "Modern urban bus operator."
+    },
+    {
+      "id": "i3",
+      "name": "Baku Metro",
+      "category": "metro",
+      "description": "Urban rail backbone since 1967."
+    },
+    {
+      "id": "i4",
+      "name": "Baku Taxi Service",
+      "category": "taxi",
+      "description": "State-backed taxi network."
+    }
+  ],
+  "analytics": {
+    "overview": {
+      "managedEntities": 12,
+      "employees": 50000,
+      "foundedAt": "2024-11-07"
+    },
+    "densityTrend": [
+      { "label": "Mon", "density": 61, "delay": 4 },
+      { "label": "Tue", "density": 67, "delay": 5 },
+      { "label": "Wed", "density": 73, "delay": 7 },
+      { "label": "Thu", "density": 71, "delay": 6 },
+      { "label": "Fri", "density": 79, "delay": 9 }
+    ]
+  }
+}
