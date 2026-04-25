@@ -7,3 +7,7 @@ Recommended production path:
 4. Background jobs later for AI prediction refresh
 
 Current MVP backend uses in-memory mock data for speed, but the folder and schema are ready for a real database transition.
+
+Canonical MVP data source:
+
+- `database/db.json`

@@ -47,7 +47,7 @@ Main MVP data file:
 
 - `database/db.json`
 
-The backend still supports the old fallback path `database/database/db.json` so older copies do not break.
+Canonical structure uses a single database path only (`database/db.json`) to avoid duplicate data drift.
 
 ## Real-data next step
 
