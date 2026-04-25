@@ -1,8 +1,9 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { Plus, Trash2, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardHeader } from '@/components/ui/card';
 import { TeamMember } from '@/lib/types';
 import { apiClient } from '@/services/api-client';
 import { useApp } from '@/components/providers/app-provider';
@@ -29,33 +30,44 @@ export function TeamManager({ team }: { team: TeamMember[] }) {
   return (
     <div className='grid gap-6 xl:grid-cols-[1.15fr_0.85fr]'>
       <Card>
-        <h3 className='text-lg font-semibold'>Team spotlight</h3>
-        <div className='mt-4 grid gap-4 md:grid-cols-2'>
-          {sortedTeam.map((member) => (
-            <div key={member.id} className='rounded-3xl p-4' style={{ border: '1px solid var(--border)', background: 'var(--panel)' }}>
-              <div className='flex items-center gap-3'>
-                <img src={member.image} alt={`${member.name} ${member.surname}`} className='h-14 w-14 rounded-2xl object-cover' />
-                <div>
-                  <p className='font-medium'>{member.name} {member.surname}</p>
-                  <p className='text-sm soft-text'>{member.role}</p>
+        <CardHeader overline='Roster' title='Team spotlight' description={`${sortedTeam.length} members on the public landing.`} />
+        {sortedTeam.length === 0 ? (
+          <div className='rounded-xl border border-dashed border-[color:var(--border-strong)] bg-[var(--surface)] p-6 text-center text-sm text-[color:var(--text-soft)]'>
+            No team members yet. Add one on the right.
+          </div>
+        ) : (
+          <div className='grid gap-3 md:grid-cols-2'>
+            {sortedTeam.map((member) => (
+              <div key={member.id} className='group rounded-xl border border-[color:var(--border)] bg-[var(--surface)] p-4 transition-colors hover:border-[color:var(--border-strong)]'>
+                <div className='flex items-center gap-3'>
+                  <img src={member.image} alt={`${member.name} ${member.surname}`} className='h-12 w-12 rounded-xl object-cover ring-1 ring-[color:var(--border-strong)]' />
+                  <div className='min-w-0'>
+                    <p className='truncate text-sm font-semibold'>{member.name} {member.surname}</p>
+                    <p className='truncate text-xs text-[color:var(--text-soft)]'>{member.role}</p>
+                  </div>
                 </div>
+                <p className='mt-3 line-clamp-3 text-xs leading-5 text-[color:var(--text-soft)]'>{member.bio}</p>
+                <button
+                  className='mt-4 inline-flex items-center gap-1.5 rounded-md border border-[color:color-mix(in_srgb,var(--danger)_30%,transparent)] bg-[var(--danger-soft)] px-2 py-1 text-[11px] font-semibold text-[color:#fda4af] hover:brightness-110'
+                  onClick={() => deleteMember(member.id)}
+                >
+                  <Trash2 className='h-3 w-3' /> Delete
+                </button>
               </div>
-              <p className='mt-3 text-sm soft-text'>{member.bio}</p>
-              <button className='mt-4 rounded-xl px-3 py-2 text-xs text-rose-300' style={{ border: '1px solid rgba(244,63,94,.24)' }} onClick={() => deleteMember(member.id)}>Delete</button>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </Card>
       <Card>
-        <h3 className='text-lg font-semibold'>Add team member</h3>
-        <div className='mt-4 space-y-4'>
-          <input className='w-full rounded-2xl px-4 py-3 outline-none' style={{ border: '1px solid var(--border)', background: 'var(--panel)' }} placeholder='First name' value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-          <input className='w-full rounded-2xl px-4 py-3 outline-none' style={{ border: '1px solid var(--border)', background: 'var(--panel)' }} placeholder='Surname' value={form.surname} onChange={(e) => setForm({ ...form, surname: e.target.value })} />
-          <input className='w-full rounded-2xl px-4 py-3 outline-none' style={{ border: '1px solid var(--border)', background: 'var(--panel)' }} placeholder='Role' value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} />
-          <input className='w-full rounded-2xl px-4 py-3 outline-none' style={{ border: '1px solid var(--border)', background: 'var(--panel)' }} placeholder='Image URL' value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} />
-          <textarea className='min-h-28 w-full rounded-2xl px-4 py-3 outline-none' style={{ border: '1px solid var(--border)', background: 'var(--panel)' }} placeholder='Bio' value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} />
-          <Button className='w-full' onClick={createMember}>Save member</Button>
-          {message ? <p className='text-sm text-emerald-300'>{message}</p> : null}
+        <CardHeader overline='CRUD' title='Add team member' icon={<UserPlus className='h-5 w-5' />} />
+        <div className='space-y-3'>
+          <input className='input-base' placeholder='First name' value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          <input className='input-base' placeholder='Surname' value={form.surname} onChange={(e) => setForm({ ...form, surname: e.target.value })} />
+          <input className='input-base' placeholder='Role' value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} />
+          <input className='input-base' placeholder='Image URL' value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} />
+          <textarea className='input-base min-h-28' placeholder='Bio' value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} />
+          <Button className='w-full' onClick={createMember} leftIcon={<Plus className='h-4 w-4' />}>Save member</Button>
+          {message ? <p className='inline-flex items-center gap-2 text-xs text-[color:var(--text-soft)]'><span className='dot bg-[color:var(--success)]' /> {message}</p> : null}
         </div>
       </Card>
     </div>

@@ -31,6 +31,10 @@ export interface RouteItem {
   capacity?: number;
   avgDelayMinutes?: number;
   crowded?: boolean;
+  stops?: string[];
+  stopCount?: number;
+  firstDeparture?: string;
+  lastDeparture?: string;
 }
 
 export interface AlertItem {
@@ -91,11 +95,41 @@ export interface TripForecast {
   routeId: string;
   routeName: string;
   stop: string;
+  date?: string;
   departureTime: string;
   predictedOccupancy: number;
   crowdLevel: 'low' | 'medium' | 'high';
   estimatedMinutesToEase: number;
   recommendation: string;
+  context?: {
+    weekday: boolean;
+    note: string;
+  };
+  journey?: {
+    origin: string;
+    destination: string;
+  };
+  recommendedOptionId?: 'direct' | 'transfer';
+  alternatives?: Array<{
+    id: 'direct' | 'transfer';
+    title: string;
+    transferCount: number;
+    interchange?: string;
+    totalPredictedOccupancy: number;
+    totalEstimatedMinutesToEase: number;
+    crowdLevel: 'low' | 'medium' | 'high';
+    summary: string;
+    legs: Array<{
+      routeId: string;
+      routeCode?: string;
+      routeName: string;
+      from: string;
+      to: string;
+      predictedOccupancy: number;
+      crowdLevel: 'low' | 'medium' | 'high';
+      estimatedMinutesToEase: number;
+    }>;
+  }>;
   community?: {
     reportsInThisHour: number;
     crowdProbability: number;

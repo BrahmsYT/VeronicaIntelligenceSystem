@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { env } from './config';
 import { readDb, writeDb, dbFilePath } from './db';
 import { sign, verify } from './auth';
-import { getDelayRiskAssessment, getOccupancyForecast, getPassengerFlowPrediction, getSmartRecommendation } from './services/ai';
+import { getDelayRiskAssessment, getGroundedTripNarrative, getOccupancyForecast, getPassengerFlowPrediction, getSmartRecommendation } from './services/ai';
 
 type AppRole = 'admin' | 'staff' | 'user';
 
@@ -23,6 +23,31 @@ const auth = (req: any, res: any, next: any) => {
     return res.status(401).json({ message: 'Invalid token' });
   }
 };
+
+const forecastForRoute = (db: any, route: any, stop: string, departureTime: string, date?: string) => {
+  const hour = parseHour(departureTime);
+  const weekday = isWeekdayDate(date);
+  const peakBoost = getTemporalBoost(hour, weekday);
+  const stopContextBoost = getStopContextBoost(stop, hour, weekday);
+  const crowdBoost = route.crowded ? 6 : 0;
+  const crowdMemory = getCrowdMemory(db, route.id, stop, departureTime, date);
+  const communityBoost = crowdMemory.crowdProbability >= 70 ? 6 : crowdMemory.crowdProbability >= 50 ? 3 : 0;
+  const predictedOccupancy = clamp(Math.round(route.occupancy + peakBoost + stopContextBoost + crowdBoost + communityBoost), 12, 99);
+  const estimatedMinutesToEase = predictedOccupancy <= 70 ? 0 : Math.round(18 + (predictedOccupancy - 70) * 0.9);
+  const crowdLevel: 'low' | 'medium' | 'high' = predictedOccupancy >= 85 ? 'high' : predictedOccupancy >= 65 ? 'medium' : 'low';
+  const contextNote = buildContextNote(weekday, hour, stop, stopContextBoost);
+
+  return {
+    predictedOccupancy,
+    estimatedMinutesToEase,
+    crowdLevel,
+    crowdMemory,
+    weekday,
+    contextNote
+  };
+};
+
+const levelFromOccupancy = (value: number): 'low' | 'medium' | 'high' => (value >= 85 ? 'high' : value >= 65 ? 'medium' : 'low');
 
 const requireRoles = (roles: AppRole[]) => (req: any, res: any, next: any) =>
   auth(req, res, () => (roles.includes(req.user?.role) ? next() : res.status(403).json({ message: `Allowed roles: ${roles.join(', ')}` })));
@@ -49,11 +74,20 @@ const siteSettingsSchema = z.object({
   announcements: z.array(z.string().min(2)).max(8)
 });
 
-const tripForecastSchema = z.object({
-  routeId: z.string().min(1),
-  stop: z.string().min(2),
-  departureTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/)
-});
+const tripForecastSchema = z
+  .object({
+    routeId: z.string().min(1).optional(),
+    stop: z.string().min(2).optional(),
+    origin: z.string().min(2).optional(),
+    destination: z.string().min(2).optional(),
+    date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+    departureTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/)
+  })
+  .superRefine((data, ctx) => {
+    if (!data.routeId && !(data.origin && data.destination)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['routeId'], message: 'Provide routeId or both origin and destination' });
+    }
+  });
 
 const crowdReportSchema = z.object({
   routeId: z.string().min(1),
@@ -79,25 +113,243 @@ const getSiteSettings = (db: any) => ({ ...defaultSiteSettings, ...(db.siteSetti
 
 const parseHour = (value: string) => Number(value.split(':')[0]);
 
+const parseWeekday = (date?: string) => {
+  if (!date) return new Date().getDay();
+  const parsed = new Date(`${date}T00:00:00`);
+  if (Number.isNaN(parsed.getTime())) return new Date().getDay();
+  return parsed.getDay();
+};
+
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
 const normalizeStop = (value: string) => value.trim().toLowerCase();
 
+const normalizePlace = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const transliterateAz = (value: string) =>
+  value
+    .replace(/ə/g, 'e')
+    .replace(/ı/g, 'i')
+    .replace(/ö/g, 'o')
+    .replace(/ü/g, 'u')
+    .replace(/ş/g, 's')
+    .replace(/ç/g, 'c')
+    .replace(/ğ/g, 'g');
+
+const transliterateCyrillic = (value: string) => {
+  const map: Record<string, string> = {
+    а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'yo', ж: 'zh', з: 'z', и: 'i', й: 'y', к: 'k', л: 'l', м: 'm',
+    н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u', ф: 'f', х: 'h', ц: 'ts', ч: 'ch', ш: 'sh', щ: 'shch',
+    ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya'
+  };
+
+  return value
+    .split('')
+    .map((char) => {
+      const lower = char.toLowerCase();
+      const mapped = map[lower];
+      if (mapped == null) return char;
+      return char === lower ? mapped : mapped.charAt(0).toUpperCase() + mapped.slice(1);
+    })
+    .join('');
+};
+
+const toEnglishLikeText = (value: string) => transliterateCyrillic(value).trim();
+
+const placeTokenAliases: Record<string, string> = {
+  'm/st': '',
+  mst: '',
+  metro: '',
+  m: '',
+  stansiyasi: '',
+  stansiyasii: '',
+  station: '',
+  dayanacagi: '',
+  dayanacagii: '',
+  dayanacaq: '',
+  day: '',
+  mall: '',
+  mərkəzi: 'merkezi',
+  merkezi: 'merkezi'
+};
+
+const canonicalPlace = (value: string) => {
+  const normalized = transliterateAz(normalizePlace(value)).replace(/[^a-z0-9\s/.-]/g, ' ');
+  const tokens = normalized
+    .split(/[\s/.-]+/)
+    .map((token) => placeTokenAliases[token] ?? token)
+    .filter(Boolean);
+  return tokens.join(' ').trim();
+};
+
+const placeTokens = (value: string) => canonicalPlace(value).split(' ').filter(Boolean);
+
+const placeMatchScore = (candidate: string, query: string) => {
+  const cRaw = normalizePlace(candidate);
+  const qRaw = normalizePlace(query);
+  if (!qRaw) return 0;
+  if (cRaw === qRaw) return 100;
+  if (cRaw.includes(qRaw) || qRaw.includes(cRaw)) return 88;
+
+  const c = canonicalPlace(candidate);
+  const q = canonicalPlace(query);
+  if (!q) return 0;
+  if (c === q) return 95;
+  if (c.includes(q) || q.includes(c)) return 84;
+
+  const cTokens = new Set(placeTokens(candidate));
+  const qTokens = placeTokens(query);
+  if (!qTokens.length) return 0;
+
+  const intersection = qTokens.filter((token) => cTokens.has(token)).length;
+  if (intersection === 0) return 0;
+
+  const overlapRatio = intersection / qTokens.length;
+  return Math.round(58 + overlapRatio * 32);
+};
+
+const isPlaceMatch = (candidate: string, query: string) => placeMatchScore(candidate, query) >= 80;
+
+const routeStops = (route: any): string[] => {
+  if (Array.isArray(route.stops) && route.stops.length) return route.stops;
+  return [route.origin, route.destination].filter(Boolean);
+};
+
+const findStopIndex = (route: any, place: string) => {
+  const stops = routeStops(route);
+  let bestIndex = -1;
+  let bestScore = 0;
+
+  for (let index = 0; index < stops.length; index += 1) {
+    const score = placeMatchScore(String(stops[index]), place);
+    if (score > bestScore) {
+      bestScore = score;
+      bestIndex = index;
+    }
+  }
+
+  return bestScore >= 70 ? bestIndex : -1;
+};
+
+const findBestStopName = (route: any, place: string) => {
+  const idx = findStopIndex(route, place);
+  if (idx === -1) return null;
+  return routeStops(route)[idx] as string;
+};
+
+const resolveGlobalStopName = (routes: any[], place: string) => {
+  let bestStop = place;
+  let bestScore = 0;
+
+  for (const route of routes) {
+    for (const stop of routeStops(route)) {
+      const score = placeMatchScore(String(stop), place);
+      if (score > bestScore) {
+        bestScore = score;
+        bestStop = String(stop);
+      }
+    }
+  }
+
+  return {
+    stop: bestScore >= 82 ? bestStop : place,
+    score: bestScore
+  };
+};
+
 const getCrowdReports = (db: any) => (Array.isArray(db.crowdReports) ? db.crowdReports : []);
 
-const getCrowdMemory = (db: any, routeId: string, stop: string, departureTime: string) => {
+const isWeekdayDate = (date?: string) => {
+  if (!date) {
+    const day = new Date().getDay();
+    return day >= 1 && day <= 5;
+  }
+  const parsed = new Date(`${date}T00:00:00`);
+  if (Number.isNaN(parsed.getTime())) return true;
+  const day = parsed.getDay();
+  return day >= 1 && day <= 5;
+};
+
+const getTemporalBoost = (hour: number, isWeekday: boolean) => {
+  if (isWeekday) {
+    if (hour >= 7 && hour <= 9) return 11;
+    if (hour >= 12 && hour <= 14) return 3;
+    if (hour >= 17 && hour <= 20) return 13;
+    if (hour >= 22 || hour <= 5) return -8;
+    return -2;
+  }
+
+  if (hour >= 11 && hour <= 14) return 4;
+  if (hour >= 17 && hour <= 21) return 2;
+  if (hour >= 23 || hour <= 6) return -7;
+  return -3;
+};
+
+const getStopContextBoost = (stop: string, hour: number, isWeekday: boolean) => {
+  const s = canonicalPlace(stop);
+  if (!s) return 0;
+
+  let boost = 0;
+  const hasAny = (tokens: string[]) => tokens.some((token) => s.includes(token));
+
+  if (isWeekday && hasAny(['elm', 'akademiya', 'universitet', 'uni', 'telebe'])) {
+    if (hour >= 8 && hour <= 10) boost += 7;
+    if (hour >= 15 && hour <= 18) boost += 9;
+  }
+
+  if (isWeekday && hasAny(['koroglu', '28 may', 'genclik', 'nizami', 'insaatcilar', 'nehciler', 'narimanov', 'avtovagzal'])) {
+    if (hour >= 7 && hour <= 10) boost += 4;
+    if (hour >= 17 && hour <= 20) boost += 6;
+  }
+
+  if (hasAny(['mall', 'park', 'merkez', 'mərkəz'])) {
+    if (hour >= 16 && hour <= 21) boost += isWeekday ? 5 : 7;
+    if (!isWeekday && hour >= 12 && hour <= 15) boost += 3;
+  }
+
+  if (hasAny(['xestexana', 'hospital', 'klinika'])) {
+    if (hour >= 8 && hour <= 11) boost += 3;
+    if (hour >= 17 && hour <= 20) boost += 2;
+  }
+
+  return boost;
+};
+
+const buildContextNote = (isWeekday: boolean, hour: number, stop: string, contextBoost: number) => {
+  const displayStop = toEnglishLikeText(stop);
+  const period = hour >= 17 && hour <= 20 ? 'evening peak' : hour >= 7 && hour <= 10 ? 'morning peak' : 'regular period';
+  if (contextBoost >= 8) return `${isWeekday ? 'Weekday' : 'Weekend'} ${period}; ${displayStop} zone has high local demand.`;
+  if (contextBoost >= 4) return `${isWeekday ? 'Weekday' : 'Weekend'} ${period}; ${displayStop} zone has moderate local demand.`;
+  if (contextBoost <= -2) return `${isWeekday ? 'Weekday' : 'Weekend'} off-peak window detected.`;
+  return `${isWeekday ? 'Weekday' : 'Weekend'} ${period} pattern applied.`;
+};
+
+const getCrowdMemory = (db: any, routeId: string, stop: string, departureTime: string, date?: string) => {
   const reports = getCrowdReports(db);
   const hour = parseHour(departureTime);
+  const weekday = parseWeekday(date);
   const normalizedStop = normalizeStop(stop);
 
   const sameStopReports = reports.filter((item: any) => item.routeId === routeId && normalizeStop(item.stop) === normalizedStop);
   const sameSlotReports = sameStopReports.filter((item: any) => Number(item.hour) === hour);
-  const crowdedCount = sameSlotReports.filter((item: any) => item.crowded).length;
-  const crowdProbability = sameSlotReports.length ? Math.round((crowdedCount / sameSlotReports.length) * 100) : 0;
-  const habitualCrowded = sameSlotReports.length >= 5 && crowdProbability >= 60;
+  const sameWeekdayReports = sameSlotReports.filter((item: any) => {
+    if (typeof item.dayOfWeek === 'number') return item.dayOfWeek === weekday;
+    const createdAt = item.createdAt ? new Date(item.createdAt) : null;
+    if (!createdAt || Number.isNaN(createdAt.getTime())) return false;
+    return createdAt.getDay() === weekday;
+  });
+
+  const effectiveReports = sameWeekdayReports.length >= 2 ? sameWeekdayReports : sameSlotReports;
+  const crowdedCount = effectiveReports.filter((item: any) => item.crowded).length;
+  const crowdProbability = effectiveReports.length ? Math.round((crowdedCount / effectiveReports.length) * 100) : 0;
+  const habitualCrowded = effectiveReports.length >= 5 && crowdProbability >= 60;
 
   return {
-    reportsInThisHour: sameSlotReports.length,
+    reportsInThisHour: effectiveReports.length,
     crowdProbability,
     habitualCrowded,
     recentReports: sameStopReports.slice(-20).reverse().slice(0, 5).map((item: any) => ({
@@ -318,37 +570,248 @@ app.post('/api/staff/deployment-plan', staff, (req, res) => {
   }
 });
 
-app.post('/api/user/trip-forecast', auth, (req, res) => {
+app.post('/api/user/trip-forecast', auth, async (req, res) => {
   try {
     const body = tripForecastSchema.parse(req.body);
     const db = readDb();
-    const route = db.routes.find((item: any) => item.id === body.routeId);
-    if (!route) return res.status(404).json({ message: 'Route not found' });
+    const routes = Array.isArray(db.routes) ? db.routes : [];
+    if (body.routeId) {
+      const route = routes.find((item: any) => item.id === body.routeId);
+      if (!route) return res.status(404).json({ message: 'Route not found' });
 
+      const inputStop = body.stop || body.origin || route.origin || 'Main stop';
+      const effectiveStop = findBestStopName(route, inputStop) || inputStop;
+      const base = forecastForRoute(db, route, effectiveStop, body.departureTime, body.date);
+
+      return res.json({
+        routeId: route.id,
+        routeName: route.name,
+        stop: effectiveStop,
+        date: body.date,
+        departureTime: body.departureTime,
+        predictedOccupancy: base.predictedOccupancy,
+        crowdLevel: base.crowdLevel,
+        estimatedMinutesToEase: base.estimatedMinutesToEase,
+        community: base.crowdMemory,
+        context: {
+          weekday: base.weekday,
+          note: base.contextNote
+        },
+        alternatives: [
+          {
+            id: 'direct',
+            title: '1 bus option',
+            transferCount: 0,
+            totalPredictedOccupancy: base.predictedOccupancy,
+            totalEstimatedMinutesToEase: base.estimatedMinutesToEase,
+            crowdLevel: base.crowdLevel,
+            summary: `Stay on ${route.code}. This is the selected direct route.`,
+            legs: [
+              {
+                routeId: route.id,
+                routeCode: route.code,
+                routeName: route.name,
+                from: route.origin,
+                to: route.destination,
+                predictedOccupancy: base.predictedOccupancy,
+                crowdLevel: base.crowdLevel,
+                estimatedMinutesToEase: base.estimatedMinutesToEase
+              }
+            ]
+          }
+        ],
+        recommendation:
+          base.predictedOccupancy >= 85
+            ? `Crowding is expected to be high. ${base.contextNote} Consider waiting for the next interval or switching routes.`
+            : base.predictedOccupancy >= 65
+              ? `Moderate crowding expected. ${base.contextNote} Travel is possible with short waiting time.`
+              : `Low crowding expected. ${base.contextNote} This is a good departure window.`
+      });
+    }
+
+    const originInput = body.origin as string;
+    const destinationInput = body.destination as string;
+    const originMatch = resolveGlobalStopName(routes, originInput);
+    const destinationMatch = resolveGlobalStopName(routes, destinationInput);
+    let origin = originMatch.stop;
+    let destination = destinationMatch.stop;
+
+    if (canonicalPlace(originInput) !== canonicalPlace(destinationInput) && canonicalPlace(origin) === canonicalPlace(destination)) {
+      if (originMatch.score <= destinationMatch.score && originMatch.score < 92) {
+        origin = originInput;
+      } else if (destinationMatch.score < 92) {
+        destination = destinationInput;
+      }
+    }
+
+    const directCandidates = routes
+      .map((route: any) => {
+        const fromIdx = findStopIndex(route, origin);
+        const toIdx = findStopIndex(route, destination);
+        const valid = fromIdx !== -1 && toIdx !== -1 && fromIdx < toIdx;
+        if (!valid) return null;
+
+        const legForecast = forecastForRoute(db, route, origin, body.departureTime, body.date);
+        return {
+          id: 'direct',
+          title: '1 bus, direct',
+          transferCount: 0,
+          totalPredictedOccupancy: legForecast.predictedOccupancy,
+          totalEstimatedMinutesToEase: legForecast.estimatedMinutesToEase,
+          crowdLevel: legForecast.crowdLevel,
+          score: legForecast.predictedOccupancy + legForecast.estimatedMinutesToEase * 0.35,
+          summary: `Take ${route.code} directly. No transfer needed.`,
+          community: legForecast.crowdMemory,
+          legs: [
+            {
+              routeId: route.id,
+              routeCode: route.code,
+              routeName: route.name,
+              from: origin,
+              to: destination,
+              predictedOccupancy: legForecast.predictedOccupancy,
+              crowdLevel: legForecast.crowdLevel,
+              estimatedMinutesToEase: legForecast.estimatedMinutesToEase
+            }
+          ]
+        };
+      })
+      .filter(Boolean) as any[];
+
+    const transferCandidates: any[] = [];
+    for (const first of routes) {
+      const firstFromIdx = findStopIndex(first, origin);
+      if (firstFromIdx === -1) continue;
+
+      const firstStops = routeStops(first);
+      for (const second of routes) {
+        if (first.id === second.id) continue;
+        const secondToIdx = findStopIndex(second, destination);
+        if (secondToIdx === -1) continue;
+
+        const secondStops = routeStops(second);
+        for (const interchange of firstStops) {
+          if (!interchange || isPlaceMatch(interchange, origin) || isPlaceMatch(interchange, destination)) continue;
+
+          const firstInterchangeIdx = findStopIndex(first, interchange);
+          const secondInterchangeIdx = findStopIndex(second, interchange);
+          if (firstInterchangeIdx === -1 || secondInterchangeIdx === -1) continue;
+          if (firstFromIdx >= firstInterchangeIdx || secondInterchangeIdx >= secondToIdx) continue;
+
+          const legA = forecastForRoute(db, first, origin, body.departureTime, body.date);
+          const legB = forecastForRoute(db, second, interchange, body.departureTime, body.date);
+          const totalPredictedOccupancy = Math.round((legA.predictedOccupancy + legB.predictedOccupancy) / 2);
+          const totalEstimatedMinutesToEase = legA.estimatedMinutesToEase + legB.estimatedMinutesToEase + 6;
+          const crowdLevel = levelFromOccupancy(totalPredictedOccupancy);
+
+          transferCandidates.push({
+            id: 'transfer',
+            title: '2 buses, lower crowding potential',
+            transferCount: 1,
+            interchange,
+            totalPredictedOccupancy,
+            totalEstimatedMinutesToEase,
+            crowdLevel,
+            score: totalPredictedOccupancy + 8 + totalEstimatedMinutesToEase * 0.35,
+            summary: `Take ${first.code} to ${toEnglishLikeText(interchange)} stop, then transfer to ${second.code}.`,
+            community: legA.crowdMemory,
+            legs: [
+              {
+                routeId: first.id,
+                routeCode: first.code,
+                routeName: first.name,
+                from: origin,
+                to: interchange,
+                predictedOccupancy: legA.predictedOccupancy,
+                crowdLevel: legA.crowdLevel,
+                estimatedMinutesToEase: legA.estimatedMinutesToEase
+              },
+              {
+                routeId: second.id,
+                routeCode: second.code,
+                routeName: second.name,
+                from: interchange,
+                to: destination,
+                predictedOccupancy: legB.predictedOccupancy,
+                crowdLevel: legB.crowdLevel,
+                estimatedMinutesToEase: legB.estimatedMinutesToEase
+              }
+            ]
+          });
+        }
+      }
+    }
+
+    const bestDirect = directCandidates.sort((a, b) => a.score - b.score)[0] || null;
+    const bestTransfer = transferCandidates.sort((a, b) => a.score - b.score)[0] || null;
+    const alternatives = [bestDirect, bestTransfer].filter(Boolean);
+
+    if (alternatives.length === 0) {
+      return res.status(404).json({
+        message: `No route option found from "${toEnglishLikeText(originInput)}" to "${toEnglishLikeText(destinationInput)}". Try another stop name.`
+      });
+    }
+
+    const recommended = alternatives.sort((a, b) => a.score - b.score)[0];
+    const displayOrigin = toEnglishLikeText(originInput);
+    const displayDestination = toEnglishLikeText(destinationInput);
+    const directVsTransferNote =
+      bestDirect && bestTransfer
+        ? bestTransfer.totalPredictedOccupancy < bestDirect.totalPredictedOccupancy
+          ? `2 buses can reduce crowding by about ${bestDirect.totalPredictedOccupancy - bestTransfer.totalPredictedOccupancy}% but requires 1 transfer.`
+          : `1 bus is more convenient and crowding difference is small.`
+        : bestDirect
+          ? 'A direct route was found and selected as best option.'
+          : 'A transfer route was found as the only viable option.';
+    const weekday = isWeekdayDate(body.date);
     const hour = parseHour(body.departureTime);
-    const peakBoost = hour >= 7 && hour <= 9 ? 9 : hour >= 17 && hour <= 20 ? 11 : -4;
-    const crowdBoost = route.crowded ? 6 : 0;
-  const crowdMemory = getCrowdMemory(db, route.id, body.stop, body.departureTime);
-  const communityBoost = crowdMemory.crowdProbability >= 70 ? 6 : crowdMemory.crowdProbability >= 50 ? 3 : 0;
-  const predictedOccupancy = clamp(Math.round(route.occupancy + peakBoost + crowdBoost + communityBoost), 12, 99);
-    const estimatedMinutesToEase = predictedOccupancy <= 70 ? 0 : Math.round(18 + (predictedOccupancy - 70) * 0.9);
-    const crowdLevel = predictedOccupancy >= 85 ? 'high' : predictedOccupancy >= 65 ? 'medium' : 'low';
+    const contextNote = buildContextNote(weekday, hour, origin, getStopContextBoost(origin, hour, weekday));
+    const groundedNarrative = await getGroundedTripNarrative({
+      origin: displayOrigin,
+      destination: displayDestination,
+      departureTime: body.departureTime,
+      date: body.date,
+      recommendedSummary: recommended.summary,
+      contextNote,
+      directVsTransferNote,
+      alternatives: alternatives.map((item) => ({
+        id: item.id,
+        transferCount: item.transferCount,
+        summary: item.summary,
+        crowdLevel: item.crowdLevel,
+        totalPredictedOccupancy: item.totalPredictedOccupancy,
+        totalEstimatedMinutesToEase: item.totalEstimatedMinutesToEase
+      }))
+    });
 
     res.json({
-      routeId: route.id,
-      routeName: route.name,
-      stop: body.stop,
+      routeId: recommended.legs[0].routeId,
+      routeName: recommended.transferCount === 0 ? recommended.legs[0].routeName : `${recommended.legs[0].routeCode} + ${recommended.legs[1].routeCode}`,
+      stop: origin,
+      date: body.date,
       departureTime: body.departureTime,
-      predictedOccupancy,
-      crowdLevel,
-      estimatedMinutesToEase,
-      community: crowdMemory,
-      recommendation:
-        predictedOccupancy >= 85
-          ? 'Crowding is expected to be high. Consider waiting for the next interval or switch to metro/rail.'
-          : predictedOccupancy >= 65
-            ? 'Moderate crowding expected. Travel is possible with short waiting time.'
-            : 'Low crowding expected. This is a good departure window.'
+      predictedOccupancy: recommended.totalPredictedOccupancy,
+      crowdLevel: recommended.crowdLevel,
+      estimatedMinutesToEase: recommended.totalEstimatedMinutesToEase,
+      community: recommended.community,
+      context: {
+        weekday,
+        note: contextNote
+      },
+      journey: { origin: displayOrigin, destination: displayDestination },
+      recommendedOptionId: recommended.id,
+      alternatives: alternatives.map((item) => ({
+        id: item.id,
+        title: item.title,
+        transferCount: item.transferCount,
+        interchange: item.interchange ? toEnglishLikeText(item.interchange) : undefined,
+        totalPredictedOccupancy: item.totalPredictedOccupancy,
+        totalEstimatedMinutesToEase: item.totalEstimatedMinutesToEase,
+        crowdLevel: item.crowdLevel,
+        summary: item.summary,
+        legs: item.legs
+      })),
+      recommendation: groundedNarrative.recommendation
     });
   } catch (e: any) {
     res.status(400).json({ message: e.message });
@@ -369,6 +832,7 @@ app.post('/api/user/crowd-report', auth, (req: any, res) => {
       stop: body.stop,
       departureTime: body.departureTime,
       hour: parseHour(body.departureTime),
+      dayOfWeek: new Date().getDay(),
       crowded: body.crowded,
       userId: req.user?.id,
       createdAt: new Date().toISOString()

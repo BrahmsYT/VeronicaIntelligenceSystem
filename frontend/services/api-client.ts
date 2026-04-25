@@ -37,7 +37,11 @@ function mapRoute(route: any): RouteItem {
     destination: route.destination,
     capacity: route.capacity,
     avgDelayMinutes: route.avgDelayMinutes,
-    crowded: route.crowded
+    crowded: route.crowded,
+    stops: Array.isArray(route.stops) ? route.stops : undefined,
+    stopCount: typeof route.stopCount === 'number' ? route.stopCount : (Array.isArray(route.stops) ? route.stops.length : undefined),
+    firstDeparture: route.firstDeparture,
+    lastDeparture: route.lastDeparture
   };
 }
 
@@ -81,7 +85,7 @@ export const apiClient = {
   getStaffAiOverview: (token: string) => request<{ routes: StaffRouteOps[]; alerts: AlertItem[]; siteSettings: SiteSettings }>('/staff/ai-overview', { headers: { Authorization: `Bearer ${token}` } }),
   getDeploymentPlan: (token: string, payload: { routeId: string; additionalDemandPercent?: number; targetOccupancy?: number }) =>
     request<DeploymentPlan>('/staff/deployment-plan', { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify(payload) }),
-  getTripForecast: (token: string, payload: { routeId: string; stop: string; departureTime: string }) =>
+  getTripForecast: (token: string, payload: { departureTime: string; date?: string; routeId?: string; stop?: string; origin?: string; destination?: string }) =>
     request<TripForecast>('/user/trip-forecast', { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify(payload) }),
   submitCrowdReport: (token: string, payload: { routeId: string; stop: string; departureTime: string; crowded: boolean }) =>
     request<CrowdReportResult>('/user/crowd-report', { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify(payload) }),

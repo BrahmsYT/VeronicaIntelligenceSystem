@@ -6,7 +6,7 @@ import { TransportModel } from './transport-models';
 
 export function TransitHeroScene() {
   return (
-    <div className='h-[360px] w-full overflow-hidden rounded-[32px]' style={{ background: 'radial-gradient(circle at top, color-mix(in srgb, var(--brand-to) 18%, transparent), transparent 42%), linear-gradient(180deg, color-mix(in srgb, var(--bg-alt) 88%, black), var(--bg))' }}>
+    <div className='relative h-[420px] w-full overflow-hidden rounded-[24px]' style={{ background: 'radial-gradient(80% 60% at 50% 0%, color-mix(in srgb, var(--brand-to) 18%, transparent), transparent 60%), radial-gradient(60% 40% at 80% 100%, color-mix(in srgb, var(--brand-from) 16%, transparent), transparent 60%), linear-gradient(180deg, color-mix(in srgb, var(--bg-alt) 92%, black), var(--bg))' }}>
       <Canvas camera={{ position: [0, 1.8, 6.2], fov: 42 }}>
         <ambientLight intensity={1.4} />
         <directionalLight position={[4, 5, 4]} intensity={2.6} />

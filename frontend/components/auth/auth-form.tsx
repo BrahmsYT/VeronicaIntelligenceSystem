@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { ArrowRight, Eye, EyeOff, Lock, Mail, ShieldCheck, Sparkles, TrainFront, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { apiClient } from '@/services/api-client';
@@ -12,8 +13,7 @@ import { ThemePreset, TransportType } from '@/lib/types';
 
 type RegisterRole = 'admin' | 'staff' | 'user';
 
-const inputClassName = 'w-full rounded-2xl px-4 py-3 outline-none transition focus:ring-2 focus:ring-sky-500/30';
-const inputStyle = { border: '1px solid var(--border)', background: 'var(--panel)' };
+const inputClassName = 'input-base';
 
 export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
   const router = useRouter();
@@ -77,35 +77,68 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
     }
   };
 
+  const roleOptions: { value: RegisterRole; label: string; hint: string }[] = [
+    { value: 'user', label: 'Passenger', hint: 'Plan trips, see crowding' },
+    { value: 'staff', label: 'Staff', hint: 'Live ops & dispatch' },
+    { value: 'admin', label: 'Admin', hint: 'Full system control' }
+  ];
+
+  const transportOptions: { value: TransportType; label: string }[] = [
+    { value: 'bus', label: 'Bus' },
+    { value: 'metro', label: 'Metro' },
+    { value: 'taxi', label: 'Taxi' },
+    { value: 'rail', label: 'Rail' }
+  ];
+
   return (
-    <div className={`mx-auto grid w-full gap-6 ${isRegister ? 'max-w-[1160px] lg:grid-cols-[0.95fr_1.05fr]' : 'max-w-[520px]'}`}>
-      <Card className='p-8'>
-        <div className='mb-2 flex items-center justify-between'>
-          <p className='rounded-full px-3 py-1 text-xs uppercase tracking-[0.2em]' style={{ border: '1px solid var(--border)', background: 'var(--panel)' }}>
-            AZCON Access
-          </p>
-          <p className='text-xs soft-text'>{isRegister ? 'Create account' : 'Secure login'}</p>
+    <div className={`mx-auto grid w-full gap-6 ${isRegister ? 'max-w-[1180px] lg:grid-cols-[1.05fr_0.95fr]' : 'max-w-[480px]'}`}>
+      <Card className='p-8 md:p-10'>
+        {/* Brand block */}
+        <Link href='/' className='inline-flex items-center gap-3'>
+          <span className='flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-strong)] bg-[var(--surface-2)]'>
+            <TrainFront className='h-4 w-4 text-[color:var(--brand-secondary)]' />
+          </span>
+          <span className='text-sm font-semibold tracking-tight'>AZCON Smart Transit</span>
+        </Link>
+
+        <div className='mt-8'>
+          <p className='text-overline'>{isRegister ? 'Create account' : 'Secure login'}</p>
+          <h1 className='mt-2 text-h1'>{isRegister ? t.auth.registerTitle : t.auth.loginTitle}</h1>
+          <p className='mt-3 max-w-md text-sm text-[color:var(--text-soft)]'>{t.auth.welcome}</p>
         </div>
 
-        <h1 className='text-3xl font-semibold'>{isRegister ? t.auth.registerTitle : t.auth.loginTitle}</h1>
-        <p className='mt-2 text-sm soft-text'>{t.auth.welcome}</p>
-
-        <form className='mt-8 space-y-4' onSubmit={onSubmit}>
+        <form className='mt-8 space-y-5' onSubmit={onSubmit} noValidate>
           {isRegister && (
-            <div className='grid gap-4 md:grid-cols-2'>
-              <input className={inputClassName} style={inputStyle} placeholder='First name' value={form.name} onChange={(e: any) => updateForm('name', e.target.value)} />
-              <input className={inputClassName} style={inputStyle} placeholder='Surname' value={form.surname} onChange={(e: any) => updateForm('surname', e.target.value)} />
+            <div className='grid gap-4 sm:grid-cols-2'>
+              <Field label='First name'>
+                <input className={inputClassName} placeholder='Aysel' value={form.name} onChange={(e: any) => updateForm('name', e.target.value)} />
+              </Field>
+              <Field label='Surname'>
+                <input className={inputClassName} placeholder='Aliyev' value={form.surname} onChange={(e: any) => updateForm('surname', e.target.value)} />
+              </Field>
             </div>
           )}
 
-          <input className={inputClassName} style={inputStyle} placeholder='Email address' type='email' autoComplete='email' value={form.email} onChange={(e: any) => updateForm('email', e.target.value)} />
-
-          <div className='space-y-2'>
+          <Field label='Email address'>
             <div className='relative'>
+              <Mail className='pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--muted)]' />
               <input
-                className={`${inputClassName} pr-24`}
-                style={inputStyle}
-                placeholder='Password'
+                className={`${inputClassName} pl-10`}
+                placeholder='you@company.com'
+                type='email'
+                autoComplete='email'
+                value={form.email}
+                onChange={(e: any) => updateForm('email', e.target.value)}
+              />
+            </div>
+          </Field>
+
+          <Field label='Password' helper='Minimum 6 simvol — hərflər və rəqəmlər tövsiyə olunur.'>
+            <div className='relative'>
+              <Lock className='pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--muted)]' />
+              <input
+                className={`${inputClassName} pl-10 pr-12`}
+                placeholder='••••••••'
                 type={showPassword ? 'text' : 'password'}
                 autoComplete={isRegister ? 'new-password' : 'current-password'}
                 value={form.password}
@@ -113,76 +146,120 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
               />
               <button
                 type='button'
-                className='absolute right-3 top-1/2 -translate-y-1/2 rounded-lg px-2 py-1 text-xs soft-text hover:text-white'
-                style={{ border: '1px solid var(--border)' }}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                className='absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-[color:var(--muted)] hover:bg-[var(--surface-2)] hover:text-[color:var(--text)]'
                 onClick={() => setShowPassword((prev) => !prev)}
               >
-                {showPassword ? 'Hide' : 'Show'}
+                {showPassword ? <EyeOff className='h-4 w-4' /> : <Eye className='h-4 w-4' />}
               </button>
             </div>
-            <p className='text-xs soft-text'>Minimum 6 simvol istifadə et.</p>
-          </div>
+          </Field>
 
           {isRegister && (
             <>
-              <input
-                className={inputClassName}
-                style={inputStyle}
-                placeholder='Confirm password'
-                type={showPassword ? 'text' : 'password'}
-                autoComplete='new-password'
-                value={form.confirmPassword}
-                onChange={(e: any) => updateForm('confirmPassword', e.target.value)}
-              />
+              <Field label='Confirm password'>
+                <input
+                  className={inputClassName}
+                  placeholder='Repeat password'
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete='new-password'
+                  value={form.confirmPassword}
+                  onChange={(e: any) => updateForm('confirmPassword', e.target.value)}
+                />
+              </Field>
 
-              <div className='grid gap-4 md:grid-cols-2'>
-                <select className={inputClassName} style={inputStyle} value={form.role} onChange={(e: any) => setForm((prev) => ({ ...prev, role: e.target.value as RegisterRole }))}>
-                  <option value='user'>User (Passenger)</option>
-                  <option value='staff'>Staff (Operations)</option>
-                  <option value='admin'>Admin (Developer)</option>
-                </select>
-
-                <select className={inputClassName} style={inputStyle} value={transportType} onChange={(e: any) => setTransportType(e.target.value as TransportType)}>
-                  <option value='bus'>Bus</option>
-                  <option value='metro'>Metro</option>
-                  <option value='taxi'>Taxi</option>
-                  <option value='rail'>Rail</option>
-                </select>
+              <div>
+                <p className='text-overline mb-2'>Account role</p>
+                <div className='grid gap-2 sm:grid-cols-3'>
+                  {roleOptions.map((opt) => {
+                    const active = form.role === opt.value;
+                    return (
+                      <button
+                        key={opt.value}
+                        type='button'
+                        onClick={() => setForm((prev) => ({ ...prev, role: opt.value }))}
+                        className={`rounded-lg border p-3 text-left transition-colors ${
+                          active
+                            ? 'border-[color:var(--brand-secondary)] bg-[var(--surface-2)]'
+                            : 'border-[color:var(--border)] hover:border-[color:var(--border-strong)]'
+                        }`}
+                      >
+                        <p className='text-sm font-semibold'>{opt.label}</p>
+                        <p className='text-[11px] text-[color:var(--text-soft)]'>{opt.hint}</p>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
-              <select className={`${inputClassName} capitalize`} style={inputStyle} value={theme} onChange={(e: any) => setTheme(e.target.value as ThemePreset)}>
-                <option value='light'>Light</option>
-                <option value='dark'>Dark</option>
-                <option value='ocean'>Ocean</option>
-                <option value='neon'>Neon</option>
-                <option value='lava'>Lava</option>
-              </select>
+              <div>
+                <p className='text-overline mb-2'>Preferred transport</p>
+                <div className='grid grid-cols-2 gap-2 sm:grid-cols-4'>
+                  {transportOptions.map((opt) => {
+                    const active = transportType === opt.value;
+                    return (
+                      <button
+                        key={opt.value}
+                        type='button'
+                        onClick={() => setTransportType(opt.value)}
+                        className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
+                          active
+                            ? 'border-[color:var(--brand-secondary)] bg-[var(--surface-2)] text-[color:var(--text)]'
+                            : 'border-[color:var(--border)] text-[color:var(--text-soft)] hover:border-[color:var(--border-strong)]'
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <Field label='Default theme'>
+                <select className={`${inputClassName} capitalize`} value={theme} onChange={(e: any) => setTheme(e.target.value as ThemePreset)}>
+                  <option value='light'>Light</option>
+                  <option value='dark'>Dark</option>
+                  <option value='ocean'>Ocean</option>
+                  <option value='neon'>Neon</option>
+                  <option value='lava'>Lava</option>
+                </select>
+              </Field>
             </>
           )}
 
-          {error ? <p className='text-sm text-rose-300'>{error}</p> : null}
-
           {!isRegister ? (
-            <label className='flex items-center gap-3 rounded-xl px-3 py-2 text-sm soft-text' style={{ border: '1px solid var(--border)' }}>
+            <label className='flex items-center gap-3 rounded-lg border border-[color:var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[color:var(--text-soft)] hover:border-[color:var(--border-strong)]'>
               <input type='checkbox' checked={rememberMe} onChange={(e: any) => setRememberMe(Boolean(e.target.checked))} />
               <span>Remember me for 7 days</span>
             </label>
           ) : null}
 
-          <Button className='w-full' disabled={loading}>
-            {loading ? 'Processing...' : isRegister ? 'Create account' : 'Login'}
+          {error ? (
+            <div className='flex items-start gap-2 rounded-lg border border-[color:color-mix(in_srgb,var(--danger)_40%,transparent)] bg-[var(--danger-soft)] p-3 text-sm text-[color:#fda4af]'>
+              <AlertCircle className='mt-0.5 h-4 w-4 shrink-0' />
+              <span>{error}</span>
+            </div>
+          ) : null}
+
+          <Button className='w-full' size='lg' loading={loading} rightIcon={<ArrowRight className='h-4 w-4' />}>
+            {isRegister ? 'Create account' : 'Sign in'}
           </Button>
 
-          <div className='rounded-2xl p-3 text-xs soft-text' style={{ border: '1px dashed var(--border)' }}>
-            <p className='font-semibold text-white'>Demo credentials</p>
-            <p className='mt-1'>User: <span className='text-sky-300'>user@azcon.ai / User123!</span></p>
-            <p>Staff: <span className='text-sky-300'>staff@azcon.ai / Staff123!</span></p>
-            <p>Admin: <span className='text-sky-300'>admin@azcon.ai / Admin123!</span></p>
+          <div className='flex items-start gap-2 rounded-lg border border-[color:var(--border)] bg-[var(--surface)] p-3 text-xs text-[color:var(--text-soft)]'>
+            <ShieldCheck className='mt-0.5 h-4 w-4 shrink-0 text-[color:var(--success)]' />
+            <span>Encrypted in transit · Role-aware sessions · GDPR-ready data handling.</span>
           </div>
 
-          <p className='text-center text-sm soft-text'>
+          <details className='rounded-lg border border-dashed border-[color:var(--border-strong)] bg-[var(--surface)] p-3 text-xs text-[color:var(--text-soft)]'>
+            <summary className='cursor-pointer font-semibold text-[color:var(--text)]'>Demo credentials</summary>
+            <p className='mt-2'>User: <span className='text-[color:var(--brand-secondary)]'>user@azcon.ai / User123!</span></p>
+            <p>Staff: <span className='text-[color:var(--brand-secondary)]'>staff@azcon.ai / Staff123!</span></p>
+            <p>Admin: <span className='text-[color:var(--brand-secondary)]'>admin@azcon.ai / Admin123!</span></p>
+          </details>
+
+          <p className='text-center text-sm text-[color:var(--text-soft)]'>
             {isRegister ? 'Already have an account?' : 'Don’t have an account yet?'}{' '}
-            <Link className='font-semibold text-sky-300 hover:text-sky-200' href={isRegister ? '/login' : '/register'}>
+            <Link className='font-semibold text-[color:var(--brand-secondary)] hover:underline' href={isRegister ? '/login' : '/register'}>
               {isRegister ? 'Login' : 'Register'}
             </Link>
           </p>
@@ -190,15 +267,50 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
       </Card>
 
       {isRegister && (
-        <Card className='overflow-hidden p-4'>
-          <div className='mb-4 px-2'>
-            <p className='text-sm uppercase tracking-[0.3em]' style={{ color: 'var(--brand-to)' }}>Transport preview</p>
-            <h2 className='mt-2 text-2xl font-semibold capitalize'>{transportType} selection</h2>
-            <p className='mt-2 text-sm soft-text'>Choose preferred mode + theme. This helps personalize dashboard recommendations from first login.</p>
-          </div>
-          <TransportSelectorScene type={transportType} />
-        </Card>
+        <div className='space-y-6'>
+          <Card variant='gradient' className='overflow-hidden p-5'>
+            <div className='mb-4'>
+              <p className='text-overline'>Transport preview</p>
+              <h2 className='mt-2 text-h2 capitalize'>{transportType}</h2>
+              <p className='mt-2 text-sm text-[color:var(--text-soft)]'>Your preferred mode personalizes dashboard recommendations from first login.</p>
+            </div>
+            <div className='overflow-hidden rounded-xl border border-[color:var(--border)]'>
+              <TransportSelectorScene type={transportType} />
+            </div>
+          </Card>
+
+          <Card>
+            <p className='text-overline'>What you unlock</p>
+            <ul className='mt-3 space-y-3 text-sm'>
+              {[
+                ['Predictive crowd & delay forecasts', 'Plan trips with confidence'],
+                ['Role-aware command surfaces', 'Staff & admin tools, segmented'],
+                ['AI dispatch with safe fallback', 'Works offline-first']
+              ].map(([t1, t2]) => (
+                <li key={t1} className='flex items-start gap-3'>
+                  <span className='mt-0.5 flex h-7 w-7 items-center justify-center rounded-md bg-[var(--surface-2)] text-[color:var(--brand-secondary)]'>
+                    <Sparkles className='h-3.5 w-3.5' />
+                  </span>
+                  <div>
+                    <p className='font-medium'>{t1}</p>
+                    <p className='text-xs text-[color:var(--text-soft)]'>{t2}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        </div>
       )}
     </div>
+  );
+}
+
+function Field({ label, helper, children }: { label: string; helper?: string; children: React.ReactNode }) {
+  return (
+    <label className='block space-y-1.5'>
+      <span className='text-xs font-semibold text-[color:var(--text-soft)]'>{label}</span>
+      {children}
+      {helper ? <span className='block text-[11px] text-[color:var(--muted)]'>{helper}</span> : null}
+    </label>
   );
 }

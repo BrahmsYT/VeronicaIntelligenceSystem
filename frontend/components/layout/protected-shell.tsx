@@ -22,13 +22,23 @@ export function ProtectedShell({ children, admin = false, allowedRoles }: { chil
   }, [admin, user, isHydrated, router, roles]);
 
   if (!isHydrated || !user || !roles.includes(user.role)) {
-    return <div className='page-shell py-16 text-slate-300'>Loading secure workspace...</div>;
+    return (
+      <div className='page-shell py-16'>
+        <div className='mx-auto flex max-w-md flex-col items-center gap-4 rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] p-8 text-center'>
+          <div className='h-2 w-24 overflow-hidden rounded-full bg-[var(--surface-2)]'>
+            <div className='h-full w-1/2 animate-pulse rounded-full bg-[linear-gradient(90deg,var(--brand-from),var(--brand-to))]' />
+          </div>
+          <p className='text-overline'>Authenticating</p>
+          <p className='text-sm text-[color:var(--text-soft)]'>Loading secure workspace…</p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className='page-shell grid gap-6 py-6 lg:grid-cols-[288px_1fr]'>
       <Sidebar />
-      <main>{children}</main>
+      <main className='min-w-0'>{children}</main>
     </div>
   );
 }

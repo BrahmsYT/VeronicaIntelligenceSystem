@@ -13,6 +13,90 @@ function buildMockRecommendation(userContext: Record<string, unknown>) {
   };
 }
 
+export async function getGroundedTripNarrative(payload: {
+  origin: string;
+  destination: string;
+  departureTime: string;
+  date?: string;
+  recommendedSummary: string;
+  contextNote: string;
+  directVsTransferNote: string;
+  alternatives: Array<{
+    id: string;
+    transferCount: number;
+    summary: string;
+    crowdLevel: 'low' | 'medium' | 'high';
+    totalPredictedOccupancy: number;
+    totalEstimatedMinutesToEase: number;
+  }>;
+}) {
+  const fallback = `AI analysis for ${payload.origin} -> ${payload.destination}: ${payload.recommendedSummary} ${payload.directVsTransferNote} ${payload.contextNote}`;
+
+  if (!env.aiEnabled || !env.openRouterApiKey) {
+    return { recommendation: fallback, source: 'disabled' as const };
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), env.openRouterTimeoutMs);
+
+  try {
+    const response = await fetch(`${env.openRouterBaseUrl}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${env.openRouterApiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': env.frontend,
+        'X-Title': 'AZCON Smart Transit AI'
+      },
+      body: JSON.stringify({
+        model: env.openRouterModel,
+        messages: [
+          {
+            role: 'system',
+            content:
+              'You are a transit assistant. Only rewrite provided facts into clear English. Do not invent stops, routes, or numbers. Return JSON: {"recommendation":"..."}.'
+          },
+          {
+            role: 'user',
+            content: JSON.stringify({
+              task: 'Rewrite the recommendation in concise English only, using provided facts.',
+              strictRules: ['Do not add any new route IDs or stop names', 'Do not change numbers', 'Do not use any language other than English'],
+              data: payload
+            })
+          }
+        ],
+        temperature: 0,
+        response_format: { type: 'json_object' }
+      }),
+      signal: controller.signal
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`OpenRouter request failed: ${text}`);
+    }
+
+    const data: any = await response.json();
+    const content = data?.choices?.[0]?.message?.content;
+    if (!content || typeof content !== 'string') {
+      throw new Error('OpenRouter response content is empty');
+    }
+
+    const normalized = content.replace(/^```json\s*/i, '').replace(/```$/i, '').trim();
+    const parsed = JSON.parse(normalized);
+    const recommendation = typeof parsed?.recommendation === 'string' ? parsed.recommendation.trim() : '';
+    if (!recommendation) {
+      throw new Error('OpenRouter recommendation is missing');
+    }
+
+    return { recommendation, source: 'openrouter' as const };
+  } catch {
+    return { recommendation: fallback, source: 'fallback' as const };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function askOpenRouter(prompt: string) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), env.openRouterTimeoutMs);

@@ -1,0 +1,368 @@
+{
+  "users": [
+    {
+      "id": "u1",
+      "name": "Aysel",
+      "surname": "Mammadova",
+      "email": "admin@azcon.ai",
+      "password": "Admin123!",
+      "role": "admin",
+      "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
+      "theme": "neon",
+      "preferredTransport": "metro"
+    },
+    {
+      "id": "u2",
+      "name": "Murad",
+      "surname": "Aliyev",
+      "email": "user@azcon.ai",
+      "password": "User123!",
+      "role": "user",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+      "theme": "ocean",
+      "preferredTransport": "bus"
+    },
+    {
+      "id": "u3",
+      "name": "Nigar",
+      "surname": "Huseynova",
+      "email": "staff@azcon.ai",
+      "password": "Staff123!",
+      "role": "staff",
+      "avatar": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=200&q=80",
+      "theme": "dark",
+      "preferredTransport": "metro"
+    },
+    {
+      "id": "u_1776782835163",
+      "name": "Renat",
+      "surname": "Qasimli",
+      "email": "qasimlirenat@gmail.com",
+      "password": "qasimli2006",
+      "role": "admin",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+      "theme": "dark",
+      "preferredLanguage": "en",
+      "preferredTransport": "rail"
+    },
+    {
+      "id": "u_1776783192653",
+      "name": "Renat",
+      "surname": "Qasimli",
+      "email": "qasimlirenat1@gmail.com",
+      "password": "qasimli2006",
+      "role": "user",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+      "theme": "dark",
+      "preferredLanguage": "en",
+      "preferredTransport": "bus"
+    },
+    {
+      "id": "u_1776798164492",
+      "name": "Renat",
+      "surname": "Qasimli",
+      "email": "qasimlirenat2@gmail.com",
+      "password": "qasimli2006",
+      "role": "user",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+      "theme": "lava",
+      "preferredLanguage": "en",
+      "preferredTransport": "rail"
+    }
+  ],
+  "routes": [
+    {
+      "id": "r1",
+      "code": "BUS-88A",
+      "name": "Ahmadli - 28 May",
+      "transportType": "bus",
+      "origin": "Ahmadli",
+      "destination": "28 May",
+      "status": "busy",
+      "occupancy": 91,
+      "delayRisk": "high",
+      "capacity": 130,
+      "avgDelayMinutes": 11,
+      "crowded": true
+    },
+    {
+      "id": "r2",
+      "code": "METRO-01",
+      "name": "Koroglu - Icherisheher",
+      "transportType": "metro",
+      "origin": "Koroglu",
+      "destination": "Icherisheher",
+      "status": "stable",
+      "occupancy": 74,
+      "delayRisk": "low",
+      "capacity": 1100,
+      "avgDelayMinutes": 2,
+      "crowded": false
+    },
+    {
+      "id": "r3",
+      "code": "RAIL-X1",
+      "name": "Baku - Sumgayit",
+      "transportType": "rail",
+      "origin": "Baku",
+      "destination": "Sumgayit",
+      "status": "stable",
+      "occupancy": 58,
+      "delayRisk": "low",
+      "capacity": 900,
+      "avgDelayMinutes": 3,
+      "crowded": false
+    },
+    {
+      "id": "r4",
+      "code": "TAXI-CITY",
+      "name": "Airport Connector",
+      "transportType": "taxi",
+      "origin": "Koroglu",
+      "destination": "Airport",
+      "status": "watch",
+      "occupancy": 63,
+      "delayRisk": "medium",
+      "capacity": 4,
+      "avgDelayMinutes": 7,
+      "crowded": false
+    }
+  ],
+  "predictions": [
+    {
+      "id": "p1",
+      "routeId": "r1",
+      "passengerFlow": 1280,
+      "occupancyForecast": 94,
+      "delayRisk": "high",
+      "generatedAt": "2026-04-21T08:00:00Z"
+    }
+  ],
+  "recommendations": [
+    {
+      "id": "rec1",
+      "title": "Shift to metro",
+      "description": "Use metro on east-west corridor to avoid bus crowding.",
+      "confidence": 0.91,
+      "audience": "user"
+    },
+    {
+      "id": "rec2",
+      "title": "Deploy reserve buses",
+      "description": "Add 3 reserve buses to BUS-88A at peak time.",
+      "confidence": 0.88,
+      "audience": "admin"
+    }
+  ],
+  "alerts": [
+    {
+      "id": "a1",
+      "title": "Crowding spike on BUS-88A",
+      "severity": "critical",
+      "description": "Occupancy exceeded 90% for two intervals.",
+      "createdAt": "2026-04-21T07:30:00Z"
+    }
+  ],
+  "team": [],
+  "institutions": [
+    {
+      "id": "i1",
+      "name": "AZAL",
+      "category": "aviation",
+      "description": "National carrier with 50+ routes."
+    },
+    {
+      "id": "i2",
+      "name": "BakuBus",
+      "category": "bus",
+      "description": "Modern urban bus operator."
+    },
+    {
+      "id": "i3",
+      "name": "Baku Metro",
+      "category": "metro",
+      "description": "Urban rail backbone since 1967."
+    },
+    {
+      "id": "i4",
+      "name": "Baku Taxi Service",
+      "category": "taxi",
+      "description": "State-backed taxi network."
+    }
+  ],
+  "analytics": {
+    "overview": {
+      "managedEntities": 12,
+      "employees": 50000,
+      "foundedAt": "2024-11-07"
+    },
+    "densityTrend": [
+      {
+        "label": "Mon",
+        "density": 61,
+        "delay": 4
+      },
+      {
+        "label": "Tue",
+        "density": 67,
+        "delay": 5
+      },
+      {
+        "label": "Wed",
+        "density": 73,
+        "delay": 7
+      },
+      {
+        "label": "Thu",
+        "density": 71,
+        "delay": 6
+      },
+      {
+        "label": "Fri",
+        "density": 79,
+        "delay": 9
+      }
+    ]
+  },
+  "siteSettings": {
+    "maintenanceMode": false,
+    "registrationOpen": true,
+    "aiDispatchEnabled": true,
+    "announcements": [
+      "Smart transit mode is active.",
+      "Staff AI dispatch board monitors peak-hour crowding."
+    ]
+  },
+  "crowdReports": [
+    {
+      "id": "cr_seed_1",
+      "routeId": "r1",
+      "stop": "28 May",
+      "departureTime": "08:30",
+      "hour": 8,
+      "crowded": true,
+      "userId": "u2",
+      "createdAt": "2026-04-24T08:31:00.000Z"
+    },
+    {
+      "id": "cr_seed_2",
+      "routeId": "r1",
+      "stop": "28 May",
+      "departureTime": "08:35",
+      "hour": 8,
+      "crowded": true,
+      "userId": "u_1776783192653",
+      "createdAt": "2026-04-24T08:36:00.000Z"
+    },
+    {
+      "id": "cr_seed_3",
+      "routeId": "r2",
+      "stop": "Koroglu",
+      "departureTime": "10:10",
+      "hour": 10,
+      "crowded": false,
+      "userId": "u3",
+      "createdAt": "2026-04-24T10:11:00.000Z"
+    },
+    {
+      "id": "cr_1777115223216_347",
+      "routeId": "r1",
+      "stop": "Ahmadli",
+      "departureTime": "08:30",
+      "hour": 8,
+      "crowded": true,
+      "userId": "u2",
+      "createdAt": "2026-04-25T11:07:03.216Z"
+    },
+    {
+      "id": "cr_1777115224081_584",
+      "routeId": "r1",
+      "stop": "Ahmadli",
+      "departureTime": "08:30",
+      "hour": 8,
+      "crowded": true,
+      "userId": "u2",
+      "createdAt": "2026-04-25T11:07:04.081Z"
+    },
+    {
+      "id": "cr_1777115224572_55",
+      "routeId": "r1",
+      "stop": "Ahmadli",
+      "departureTime": "08:30",
+      "hour": 8,
+      "crowded": true,
+      "userId": "u2",
+      "createdAt": "2026-04-25T11:07:04.572Z"
+    },
+    {
+      "id": "cr_1777115225141_322",
+      "routeId": "r1",
+      "stop": "Ahmadli",
+      "departureTime": "08:30",
+      "hour": 8,
+      "crowded": true,
+      "userId": "u2",
+      "createdAt": "2026-04-25T11:07:05.141Z"
+    },
+    {
+      "id": "cr_1777115225627_908",
+      "routeId": "r1",
+      "stop": "Ahmadli",
+      "departureTime": "08:30",
+      "hour": 8,
+      "crowded": true,
+      "userId": "u2",
+      "createdAt": "2026-04-25T11:07:05.627Z"
+    },
+    {
+      "id": "cr_1777115225836_752",
+      "routeId": "r1",
+      "stop": "Ahmadli",
+      "departureTime": "08:30",
+      "hour": 8,
+      "crowded": true,
+      "userId": "u2",
+      "createdAt": "2026-04-25T11:07:05.836Z"
+    },
+    {
+      "id": "cr_1777115226153_580",
+      "routeId": "r1",
+      "stop": "Ahmadli",
+      "departureTime": "08:30",
+      "hour": 8,
+      "crowded": true,
+      "userId": "u2",
+      "createdAt": "2026-04-25T11:07:06.153Z"
+    },
+    {
+      "id": "cr_1777132541820_116",
+      "routeId": "r4",
+      "stop": "Koroglu",
+      "departureTime": "08:30",
+      "hour": 8,
+      "crowded": true,
+      "userId": "u2",
+      "createdAt": "2026-04-25T15:55:41.820Z"
+    },
+    {
+      "id": "cr_1777132543766_477",
+      "routeId": "r4",
+      "stop": "Koroglu",
+      "departureTime": "08:30",
+      "hour": 8,
+      "crowded": false,
+      "userId": "u2",
+      "createdAt": "2026-04-25T15:55:43.766Z"
+    },
+    {
+      "id": "cr_1777132547186_309",
+      "routeId": "r4",
+      "stop": "Koroglu",
+      "departureTime": "08:30",
+      "hour": 8,
+      "crowded": true,
+      "userId": "u2",
+      "createdAt": "2026-04-25T15:55:47.186Z"
+    }
+  ]
+}

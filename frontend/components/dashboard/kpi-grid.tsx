@@ -1,16 +1,27 @@
 import { motion } from 'framer-motion';
-import { Card } from '@/components/ui/card';
+import { StatTile, StatTrend } from '@/components/ui/stat-tile';
+
+function inferTrend(change: string): StatTrend {
+  if (!change) return 'flat';
+  if (/-|down|drop|decrease/i.test(change)) return 'down';
+  if (/\+|up|gain|increase|↑/.test(change)) return 'up';
+  return 'flat';
+}
+
+const accents: Array<'brand' | 'info' | 'success' | 'warning'> = ['brand', 'info', 'success', 'warning'];
 
 export function KpiGrid({ items }: { items: Array<{ label: string; value: string; change: string }> }) {
   return (
     <div className='grid gap-4 md:grid-cols-3'>
       {items.map((item, index) => (
-        <motion.div key={item.label} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.08 }}>
-          <Card>
-            <p className='text-sm text-slate-400'>{item.label}</p>
-            <h3 className='mt-3 text-3xl font-semibold'>{item.value}</h3>
-            <p className='mt-2 text-sm text-emerald-300'>{item.change}</p>
-          </Card>
+        <motion.div key={item.label} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.06 }}>
+          <StatTile
+            label={item.label}
+            value={item.value}
+            helper={item.change}
+            trend={inferTrend(item.change)}
+            accent={accents[index % accents.length]}
+          />
         </motion.div>
       ))}
     </div>

@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Card } from '@/components/ui/card';
+import { Megaphone, Save, Settings2, Trash2 } from 'lucide-react';
+import { Card, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { SiteSettings } from '@/lib/types';
 import { apiClient } from '@/services/api-client';
 import { useApp } from '@/components/providers/app-provider';
@@ -47,54 +49,93 @@ export function SiteSettingsManager({ initialSettings }: { initialSettings: Site
     setAnnouncementInput('');
   };
 
+  const toggles: { key: keyof SiteSettings; label: string; description: string }[] = [
+    { key: 'maintenanceMode', label: 'Maintenance mode', description: 'Display maintenance banner; restrict non-admin actions.' },
+    { key: 'registrationOpen', label: 'User registration', description: 'Allow new accounts to sign up via the public register page.' },
+    { key: 'aiDispatchEnabled', label: 'AI dispatch module', description: 'Enable AI-driven deployment recommendations on Staff panel.' }
+  ];
+
   return (
     <Card>
-      <h3 className='text-lg font-semibold'>Site feature controls</h3>
-      <p className='mt-2 text-sm soft-text'>Developer/Admin panel for global site behaviour.</p>
+      <CardHeader
+        overline='Feature flags'
+        title='Site feature controls'
+        description='Enterprise-style toggles for global behaviour. Changes apply immediately on save.'
+        icon={<Settings2 className='h-5 w-5' />}
+      />
 
-      <div className='mt-5 space-y-3'>
-        <label className='flex items-center justify-between rounded-2xl px-4 py-3' style={{ border: '1px solid var(--border)', background: 'var(--panel)' }}>
-          <span>Maintenance mode</span>
-          <input type='checkbox' checked={settings.maintenanceMode} onChange={() => setSettings({ ...settings, maintenanceMode: !settings.maintenanceMode })} />
-        </label>
-
-        <label className='flex items-center justify-between rounded-2xl px-4 py-3' style={{ border: '1px solid var(--border)', background: 'var(--panel)' }}>
-          <span>User registration open</span>
-          <input type='checkbox' checked={settings.registrationOpen} onChange={() => setSettings({ ...settings, registrationOpen: !settings.registrationOpen })} />
-        </label>
-
-        <label className='flex items-center justify-between rounded-2xl px-4 py-3' style={{ border: '1px solid var(--border)', background: 'var(--panel)' }}>
-          <span>AI dispatch module enabled</span>
-          <input type='checkbox' checked={settings.aiDispatchEnabled} onChange={() => setSettings({ ...settings, aiDispatchEnabled: !settings.aiDispatchEnabled })} />
-        </label>
+      <div className='space-y-2'>
+        {toggles.map((tg) => {
+          const on = Boolean(settings[tg.key]);
+          return (
+            <div
+              key={tg.key as string}
+              className='flex items-start justify-between gap-4 rounded-xl border border-[color:var(--border)] bg-[var(--surface)] p-4 transition-colors hover:border-[color:var(--border-strong)]'
+            >
+              <div className='min-w-0'>
+                <div className='flex items-center gap-2'>
+                  <p className='font-semibold'>{tg.label}</p>
+                  <Badge tone={on ? 'success' : 'neutral'} withDot>{on ? 'Enabled' : 'Disabled'}</Badge>
+                </div>
+                <p className='mt-1 text-xs text-[color:var(--text-soft)]'>{tg.description}</p>
+              </div>
+              <button
+                type='button'
+                role='switch'
+                aria-checked={on}
+                aria-label={`Toggle ${tg.label}`}
+                onClick={() => setSettings({ ...settings, [tg.key]: !on } as SiteSettings)}
+                className='toggle shrink-0'
+                data-on={on ? 'true' : 'false'}
+              />
+            </div>
+          );
+        })}
       </div>
 
-      <div className='mt-5 rounded-2xl p-4' style={{ border: '1px solid var(--border)', background: 'var(--panel)' }}>
-        <p className='text-sm font-medium'>Announcements</p>
+      <div className='mt-6 rounded-xl border border-[color:var(--border)] bg-[var(--surface)] p-4'>
+        <div className='flex items-center gap-2'>
+          <Megaphone className='h-4 w-4 text-[color:var(--brand-secondary)]' />
+          <p className='text-sm font-semibold'>Announcements</p>
+          <span className='ml-auto text-xs text-[color:var(--muted)]'>{settings.announcements.length} / 8</span>
+        </div>
         <div className='mt-3 flex gap-2'>
           <input
-            className='w-full rounded-xl px-3 py-2 outline-none'
-            style={{ border: '1px solid var(--border)', background: 'transparent' }}
+            className='input-base'
             value={announcementInput}
             onChange={(e: any) => setAnnouncementInput(e.target.value)}
-            placeholder='Write notice for users/staff'
+            placeholder='Write a notice for users / staff'
           />
-          <Button type='button' onClick={addAnnouncement}>Add</Button>
+          <Button type='button' onClick={addAnnouncement} variant='secondary'>Add</Button>
         </div>
 
-        <div className='mt-3 space-y-2'>
-          {settings.announcements.map((item, index) => (
-            <div key={`${item}-${index}`} className='flex items-center justify-between rounded-xl px-3 py-2 text-sm' style={{ border: '1px solid var(--border)' }}>
-              <span>{item}</span>
-              <button onClick={() => setSettings({ ...settings, announcements: settings.announcements.filter((_, i) => i !== index) })} className='text-rose-300'>Remove</button>
-            </div>
-          ))}
-        </div>
+        {settings.announcements.length ? (
+          <div className='mt-3 space-y-2'>
+            {settings.announcements.map((item, index) => (
+              <div key={`${item}-${index}`} className='flex items-center justify-between gap-3 rounded-md border border-[color:var(--border)] px-3 py-2 text-sm'>
+                <span className='truncate'>{item}</span>
+                <button
+                  onClick={() => setSettings({ ...settings, announcements: settings.announcements.filter((_, i) => i !== index) })}
+                  className='inline-flex items-center gap-1 text-xs text-[color:#fda4af] hover:text-[color:var(--danger)]'
+                  aria-label='Remove announcement'
+                >
+                  <Trash2 className='h-3.5 w-3.5' />
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className='mt-3 text-xs text-[color:var(--muted)]'>No active announcements.</p>
+        )}
       </div>
 
-      <div className='mt-5 flex items-center gap-3'>
-        <Button onClick={save} disabled={saving}>{saving ? 'Saving...' : 'Save settings'}</Button>
-        {message ? <span className='text-sm soft-text'>{message}</span> : null}
+      <div className='mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-[color:var(--border)] pt-5'>
+        {message ? (
+          <span className='inline-flex items-center gap-2 text-xs text-[color:var(--text-soft)]'>
+            <span className='dot bg-[color:var(--success)]' /> {message}
+          </span>
+        ) : <span />}
+        <Button onClick={save} loading={saving} leftIcon={<Save className='h-4 w-4' />}>Save settings</Button>
       </div>
     </Card>
   );

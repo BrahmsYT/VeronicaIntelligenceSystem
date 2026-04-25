@@ -1,81 +1,32 @@
 {
-  "users": [
-    {
-      "id": "u1",
-      "name": "Aysel",
-      "surname": "Mammadova",
-      "email": "admin@azcon.ai",
-      "password": "Admin123!",
-      "role": "admin",
-      "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
-      "theme": "neon",
-      "preferredTransport": "metro"
-    },
-    {
-      "id": "u2",
-      "name": "Murad",
-      "surname": "Aliyev",
-      "email": "user@azcon.ai",
-      "password": "User123!",
-      "role": "user",
-      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
-      "theme": "ocean",
-      "preferredTransport": "bus"
-    },
-    {
-      "id": "u3",
-      "name": "Nigar",
-      "surname": "Huseynova",
-      "email": "staff@azcon.ai",
-      "password": "Staff123!",
-      "role": "staff",
-      "avatar": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=200&q=80",
-      "theme": "dark",
-      "preferredTransport": "metro"
-    },
-    {
-      "id": "u_1776782835163",
-      "name": "Renat",
-      "surname": "Qasimli",
-      "email": "qasimlirenat@gmail.com",
-      "password": "qasimli2006",
-      "role": "admin",
-      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
-      "theme": "dark",
-      "preferredLanguage": "en",
-      "preferredTransport": "rail"
-    },
-    {
-      "id": "u_1776783192653",
-      "name": "Renat",
-      "surname": "Qasimli",
-      "email": "qasimlirenat1@gmail.com",
-      "password": "qasimli2006",
-      "role": "user",
-      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
-      "theme": "dark",
-      "preferredLanguage": "en",
-      "preferredTransport": "bus"
-    },
-    {
-      "id": "u_1776798164492",
-      "name": "Renat",
-      "surname": "Qasimli",
-      "email": "qasimlirenat2@gmail.com",
-      "password": "qasimli2006",
-      "role": "user",
-      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
-      "theme": "lava",
-      "preferredLanguage": "en",
-      "preferredTransport": "rail"
-    }
+  "source": "avtobus_cedveli.xlsx",
+  "sheet": "Avtobus Cədvəli",
+  "city": "Bakı",
+  "transportType": "bus",
+  "currency": "AZN",
+  "fareDefault": 0.5,
+  "totalRoutes": 52,
+  "fields": {
+    "code": "Marşrut nömrəsi",
+    "origin": "A məntəqə (başlanğıc)",
+    "destination": "B məntəqə (son)",
+    "firstDeparture": "İlk çıxış (HH:MM)",
+    "lastDeparture": "Son çıxış (HH:MM)",
+    "stops": "Bütün dayanacaqlar (sıra ilə)",
+    "stopCount": "Dayanacaqların sayı",
+    "stopsRaw": "Excel-dəki orijinal vergüllü mətn"
+  },
+  "header": [
+    "Marşrut",
+    "A məntəqə",
+    "B məntəqə",
+    "İlk çıxış",
+    "Son çıxış",
+    "Dayanacaqlar"
   ],
   "routes": [
     {
-      "id": "r_1",
-      "code": "BUS-1",
-      "name": "NƏFTÇİLƏR m/st → 28 MAY m/st",
-      "transportType": "bus",
+      "code": "1",
       "origin": "NƏFTÇİLƏR m/st",
       "destination": "28 MAY m/st",
       "firstDeparture": "06:00",
@@ -104,18 +55,10 @@
         "Qara Qarayev 44",
         "Neftçilər metrosu"
       ],
-      "status": "stable",
-      "occupancy": 64,
-      "delayRisk": "low",
-      "capacity": 110,
-      "avgDelayMinutes": 5,
-      "crowded": false
+      "stopsRaw": "28 May NMM D, Muğan bağı, улица Александра Пушкина, Yusif Səfərov, Əmlak məsələləri dövlət komitəsi, Bakı şəhər baş polis idarəsi, Heydər Əliyev mərkəzi, Socar neft şirkəti, Nəqliyyatı intellektual idarəetmə mərkəzi, Heydər Əliyev ev 149, Yeni Klinika, Sofaz Tower 2, Heydər Əliyev prospekti 106a, Metro Koroğlu (Milli Gimnastika Arenası), Azərişıq, Bakı texniki kolleci, DYP Nizami Rayon Şöbəsi, Qara Qarayev metrosu, Zabitlər parkı, Qara Qarayev 44, Neftçilər metrosu"
     },
     {
-      "id": "r_2",
-      "code": "BUS-2",
-      "name": "B.AVTOVAĞZAL → DƏRNƏGÜL m/st",
-      "transportType": "bus",
+      "code": "2",
       "origin": "B.AVTOVAĞZAL",
       "destination": "DƏRNƏGÜL m/st",
       "firstDeparture": "05:48",
@@ -164,18 +107,10 @@
         "Binəqədi rayon Gənclər və İdman idarəsi",
         "Dərnəgül"
       ],
-      "status": "watch",
-      "occupancy": 77,
-      "delayRisk": "medium",
-      "capacity": 130,
-      "avgDelayMinutes": 2,
-      "crowded": false
+      "stopsRaw": "Beynəlxalq Avtovağzal NMM dayanacaq 13, Biləcəri dairəsi, Shamahinka, Cəfər Cabbarlı adına kinostudiya, Tbilisi prospekti ev 187, Tbilisi pr., Çıraq plaza, Tbilisi pr. 45, Mehdi Hüseynzadə parkı, 3 saylı şəhər poliklinikası, Nizami metrosu, Şixəli Qurbanov küçəsi, Akademik milli dram teatri, Mərkəzi park, Şamsi Bədəlbəyli küçəsi, Heydər Əliyev Sarayı, Mərkəzi Bank, 28 May NMM D, Muğan bağı, улица Александра Пушкина, Yusif Səfərov, Əmlak məsələləri dövlət komitəsi, Bakı şəhər baş polis idarəsi, Heydər Əliyev mərkəzi, 8 nömrəli poliklinika, Ağa Nemətulla, Nəriman Rayon Məhkəməsi, Ağa Nemətulla ev 84, m/st Nəriman Nərimanov, Nərimanov rayon dövlət yanğından mühafizə xidmətinin bir hissəsi, Bakı patologiya mərkəzi, Dövlət Sosial Müdafiə Fondu, Elite Mall, Əhməd Rəcəbli 147, Ş.Məmmədova küç,4, Şövkət Məmmədova küç, 36, Şövkət Məmmədova ev 50, Binəqədi rayon Gənclər və İdman idarəsi, Dərnəgül"
     },
     {
-      "id": "r_3",
-      "code": "BUS-3",
-      "name": "BADAMDAR qəs. → DƏRNƏGÜL m/st",
-      "transportType": "bus",
+      "code": "3",
       "origin": "BADAMDAR qəs.",
       "destination": "DƏRNƏGÜL m/st",
       "firstDeparture": "06:00",
@@ -232,18 +167,10 @@
         "34 saylı şəhər poliklinikası",
         "Badamdar qəsəbəsi"
       ],
-      "status": "busy",
-      "occupancy": 90,
-      "delayRisk": "high",
-      "capacity": 130,
-      "avgDelayMinutes": 11,
-      "crowded": true
+      "stopsRaw": "Dərnəgül, Süleyman Sani Axundov ev. 453, Abay Kunanbayev, Azerbaijan International University, Abay Kunanbayev ev 66, Tayqa Ticarət, supermarket, Bravo, supermarket, Bolluq İK, Azadlıq prospekti metrostansiyası, Mərkəzi seçki komitəsi, Cratos Hall, Şövkət Məmmədova küç, 36, Ş.Məmmədova küç,4, Dövlət aerogeodeziya müəssisəsi, Atatürk ev 159, Istanbul oteli, 71 saylı uşaq bağçası, Gənclik Mall, Caspian Shopping Center, Metro Gənclik, Bakı Sağlamlıq Mərkəzi, Bakı Şəhər Təhsil İdarəsi, 1 saylı şəhər klinik xəstəxanası (Semaşko), Səhiyyə nazirliyi, Rusiya Səfirliyi, Sevil Qaziyeva parkı, 54 saylı uşaq bağçası, Dövlət Statistika Komitəsi, Mədəniyyət və İncəsənət universiteti, Hüseyn Cavid 207, Elmlər Akademiyası metrosu, Azərbaycan texniki universiteti, 73 saylı poçt şöbəsi, 16 saylı uşaq musiqi məktəbi, 20 saylı məktəb-lisey, Fəxri xiyaban, Şəhidlər xiyabanı, Milli Məclis, Bakı Oksford Məktəbi, Özbəkistan səfirliyi, Səbail rayon sukanal idarəsi, Caspian hospital xəstəxanası, Bazarstore supermarket, 34 saylı şəhər poliklinikası, Badamdar qəsəbəsi"
     },
     {
-      "id": "r_4",
-      "code": "BUS-4",
-      "name": "Ağ Şəhər → Montin",
-      "transportType": "bus",
+      "code": "4",
       "origin": "Ağ Şəhər",
       "destination": "Montin",
       "firstDeparture": "06:30",
@@ -280,18 +207,10 @@
         "İsmayıl Hidayətzadə 7",
         "57 saylı orta məktəb"
       ],
-      "status": "busy",
-      "occupancy": 77,
-      "delayRisk": "high",
-      "capacity": 110,
-      "avgDelayMinutes": 12,
-      "crowded": false
+      "stopsRaw": "Şah İsmayıl Xətai metrosu, Əmlak məsələləri dövlət komitəsi, Bakı şəhər baş polis idarəsi, 2 saylı Şəhər Klinik Xəstəxanası, Mərkəzi neftçilər xəstəxanası, Mehdi Mehdizadə, 1, 28 May (Səməd Vurğun bağı), Muğan bağı, Mərkəzi Bank, Rəşid Behbudov, Türkiyə Səfirliyi, Koroğlu parkı, 3 nömrəli peşə liseyi, Azneftkimyamaş ASC, H. Əliyev küç. 80, Gənclik Mall, 5 Saylı Xəstəxana, Aşıq Molla Cuma, Əhməd Rəcəbli, Fətəli Xan Xoyski, m/st Nəriman Nərimanov, Nəriman Rayon Məhkəməsi-1, Ağa Nemətulla, 291 nömrəli ekologiya liseyi, Luxe home, Ailə Wellness Mərkəzi, İsmayıl Hidayətzadə 7, 57 saylı orta məktəb"
     },
     {
-      "id": "r_5",
-      "code": "BUS-5",
-      "name": "Nərimanov m/st → 20-ci Sahə",
-      "transportType": "bus",
+      "code": "5",
       "origin": "Nərimanov m/st",
       "destination": "20-ci Sahə",
       "firstDeparture": "05:55",
@@ -324,18 +243,10 @@
         "23 nömrəli poçt şöbəsi",
         "20-ci Sahə dairəsi"
       ],
-      "status": "busy",
-      "occupancy": 89,
-      "delayRisk": "high",
-      "capacity": 110,
-      "avgDelayMinutes": 7,
-      "crowded": true
+      "stopsRaw": "m/st Nəriman Nərimanov, 39 saylı orta məktəb, Bakı İdarəetmə və texnologiya kolleci, Şəhriyar ünvanı, 4 saylı uşaq polikinikası, Təfəkkür universiteti, Nərimanov rayon bələdiyyəsi, Təbriz küçəsi, Bakı Metropoliteni, 28 May NMM D, Muğan bağı, улица Александра Пушкина, Sahil metrosu, Bəyaz zanbaqlar parkı, Azneft meydanı, Riviera restoran, Səbail rayon dövlət yanğından mühafizə hissəsi, Neftçi Qurban küçəsi, 5 saylı doğum evi, Səbail Meydanı, Su idmanı mərkəzi, Səbail DYP, Səbail rayon mühafizə idarəsi, 23 nömrəli poçt şöbəsi, 20-ci Sahə dairəsi"
     },
     {
-      "id": "r_6",
-      "code": "BUS-6",
-      "name": "20-ci Sahə → Azadlıq m/st",
-      "transportType": "bus",
+      "code": "6",
       "origin": "20-ci Sahə",
       "destination": "Azadlıq m/st",
       "firstDeparture": "05:50",
@@ -380,18 +291,10 @@
         "Bibiheybət yolu",
         "Ö.F.Nemanzadə"
       ],
-      "status": "busy",
-      "occupancy": 86,
-      "delayRisk": "high",
-      "capacity": 130,
-      "avgDelayMinutes": 10,
-      "crowded": true
+      "stopsRaw": "Azadlıq prospekti metrostansiyası, Bakı Tennis Akademiyası, 135 saylı orta məktəb, Bakı turizm peşə məktəbi, Targül Mall, Siyasi sənədlər arxivi idarəsi, Baku city villas, Nərimanov Rayon qeydiyyat şöbəsi, Школа №47, Tədris və terapevtik klinika, Cəlil Məmmədquluzadə 101, Kimya şəhərciyi, Çıraq plaza, Şəfayət Mehdiyev 323, Avropa Azərbaycan məktəbi, Şəfayət Mehdiyev 107, Hüseyn Cavid 207, Elmlər Akademiyası metrosu, Azərbaycan texniki universiteti, 73 saylı poçt şöbəsi, 16 saylı uşaq musiqi məktəbi, Respublika İncəsənət gimnaziyası, Mikayıl Müşfiq ev 44, Nərimanov heykəli, Şeyx Şamil, İçərişəhər metro, Azneft meydanı, Səbail rayon dövlət yanğından mühafizə hissəsi, 5 saylı doğum evi, Səbail Meydanı, Su idmanı mərkəzi, Səbail DYP, Səbail rayon mühafizə idarəsi, 23 nömrəli poçt şöbəsi, 20-ci Sahə dairəsi, Bibiheybət yolu, Ö.F.Nemanzadə"
     },
     {
-      "id": "r_7a",
-      "code": "BUS-7A",
-      "name": "B.AVTOVAĞZAL → Gəncə Pr",
-      "transportType": "bus",
+      "code": "7A",
       "origin": "B.AVTOVAĞZAL",
       "destination": "Gəncə Pr",
       "firstDeparture": "06:00",
@@ -445,18 +348,10 @@
         "Gəncə pr. (269 saylı məktəb)",
         "Gəncə prospekti 39"
       ],
-      "status": "busy",
-      "occupancy": 93,
-      "delayRisk": "high",
-      "capacity": 130,
-      "avgDelayMinutes": 13,
-      "crowded": true
+      "stopsRaw": "Beynəlxalq Avtovağzal NMM dayanacaq 13, Avtobus stansiyası, Bakı Beynəlxalq avtovağzal kompleksi, Biləcəri dairəsi, Shamahinka, Cəfər Cabbarlı adına kinostudiya, 20 Yanvar metrosu, Ceyhun Səlimov 101, Nəsimi Rayon Məhkəməsi, Bolmart supermarket, 1-ci Alatava, Ziya Bünyadov prospekti, Milli Arxiv İdarəsi, Nəcəf Nərimanov, Atatürk ev 159, DİN Hospitalı, Ziya Bünyadov ev 65, Təkrar metal emalı zavodu, Euro home, tikinti materialları bazarı, Baku Steel Company, Cəzaçəkmə Müəssisəsi N10, Dərnəgül Sənayə Tikinti, 73 saylı məktəb, DİN 2 saylı poliklinikası, Bakı Olimpiya stadionu, 12 saylı orta məktəb, Qara Qarayev metrosu, Zabitlər parkı, Qara Qarayev 44, Neftçilər metrosu, Qara Qarayev prospekti, Q.Qarayev pr. B.Nuriyev küç. ilə kəsişmə, Qarayev prospektinin Nuriyev küçəsi ilə kəsişməsi, Xalqlar Dostluğu metro stansiyası, Sərhədçi İdman Olimpiya Mərkəzi, 64 saylı məktəb, Əhmədli metro, Ukrayna dairəsi, Vunqtau ev 2, 249 saylı məktəb, Vunqtau, Vunqtau 252, Dövlət Sərhəd xidməti akademiyası, Gəncə pr. (269 saylı məktəb), Gəncə prospekti 39"
     },
     {
-      "id": "r_7b",
-      "code": "BUS-7B",
-      "name": "Yeni Yasamal → Koroğlu m/st",
-      "transportType": "bus",
+      "code": "7B",
       "origin": "Yeni Yasamal",
       "destination": "Koroğlu m/st",
       "firstDeparture": "06:00",
@@ -488,18 +383,10 @@
         "Bakı nəqliyyat agentliyi",
         "Koroğlu"
       ],
-      "status": "busy",
-      "occupancy": 85,
-      "delayRisk": "high",
-      "capacity": 110,
-      "avgDelayMinutes": 1,
-      "crowded": true
+      "stopsRaw": "Yeni Yasamal parkı (17 son dayanacağı), Məhəmməd Xiyabani 92, Məhəmməd Xiyabani 248, Məhəmməd Xiyabani 312, Respublika məhkəmə-tibb ekspertizası, Respublika klinik xəstəxanası, 20 Yanvar metrosu, Nəsimi Rayon Məhkəməsi, Bolmart supermarket, 1-ci Alatava, Ziya Bünyadov prospekti, Milli Arxiv İdarəsi, Nəcəf Nərimanov, DİN Hospitalı, Ziya Bünyadov ev 65, Təkrar metal emalı zavodu, Euro home, tikinti materialları bazarı, Baku Steel Company, Cəzaçəkmə Müəssisəsi N10, Dərnəgül Sənayə Tikinti, 73 saylı məktəb, Bakı nəqliyyat agentliyi, Koroğlu"
     },
     {
-      "id": "r_10",
-      "code": "BUS-10",
-      "name": "Mida → Ağ Şəhər",
-      "transportType": "bus",
+      "code": "10",
       "origin": "Mida",
       "destination": "Ağ Şəhər",
       "firstDeparture": "06:00",
@@ -542,18 +429,10 @@
         "161 saylı orta məktəb",
         "Park Yasamal"
       ],
-      "status": "busy",
-      "occupancy": 59,
-      "delayRisk": "high",
-      "capacity": 130,
-      "avgDelayMinutes": 12,
-      "crowded": false
+      "stopsRaw": "Luna Park, Жилой комплекс Renessans, Xəqani Rüstəmov 10, İzzət Orucova, Şah İsmayıl Xətai metrosu, Əmlak məsələləri dövlət komitəsi, Bakı şəhər baş polis idarəsi, 2 saylı Şəhər Klinik Xəstəxanası, Mərkəzi neftçilər xəstəxanası, Mehdi Mehdizadə, 1, 28 May (Səməd Vurğun bağı), Muğan bağı, улица Александра Пушкина, Sahil metrosu, Bəyaz zanbaqlar parkı, Niyazi, İçərişəhər metro, Axundov bağı, Həsən Seyidbəyli, Nərimanov heykəli, Mikayıl Müşfiq ev 44, Respublika İncəsənət gimnaziyası, 225 saylı orta məktəb, 5 saylı uşaq poliklinikası, Hüseyn Cavid parkı, Elmlər Akademiyası metrosu, Hüseyn Cavid 172, Əbdürrəhim bəy Haqverdiyev 43, Əbdül Rəhim Haqverdiyev 11, Qəzənfər Musabəyov parkı, Bazarstore, supermarketlər, 161 saylı orta məktəb, Park Yasamal"
     },
     {
-      "id": "r_11",
-      "code": "BUS-11",
-      "name": "S.Rəhimov küç → Sadıqcan küç",
-      "transportType": "bus",
+      "code": "11",
       "origin": "S.Rəhimov küç",
       "destination": "Sadıqcan küç",
       "firstDeparture": "06:00",
@@ -599,18 +478,10 @@
         "269 saylı məktəb",
         "I. Zulfuqarov küç. 274"
       ],
-      "status": "stable",
-      "occupancy": 64,
-      "delayRisk": "low",
-      "capacity": 130,
-      "avgDelayMinutes": 5,
-      "crowded": false
+      "stopsRaw": "Nikola Tesla Parkı, Bakı dəmiryolu vağzalı, Elmi-tədqiqat tibbi bərpa institutu, Nərimanov Rayon İcra Hakimiyyəti, Şərq bazarı, Nərimanov Rayon Məhkəməsi, Əməyin Mühafizəsi Elmi-Tədqiqat İnstitutu, Bakı konqres mərkəzi, 39 saylı orta məktəb, m/st Nəriman Nərimanov, Nərimanov rayon dövlət yanğından mühafizə xidmətinin bir hissəsi, Bakı patologiya mərkəzi, Təkrar metal emalı zavodu, Euro home, tikinti materialları bazarı, Baku Steel Company, Cəzaçəkmə Müəssisəsi N10, Dərnəgül Sənayə Tikinti, 73 saylı məktəb, DİN 2 saylı poliklinikası, Bakı Olimpiya stadionu, 12 saylı orta məktəb, Qara Qarayev metrosu, Zabitlər parkı, Qara Qarayev 44, Neftçilər metrosu, Qara Qarayev prospekti, Q.Qarayev pr. B.Nuriyev küç. ilə kəsişmə, Qarayev prospektinin Nuriyev küçəsi ilə kəsişməsi, Xalqlar Dostluğu metro stansiyası, Sərhədçi İdman Olimpiya Mərkəzi, 64 saylı məktəb, Əhmədli metro, Ukrayna dairəsi, 254 saylı məktəb, Həzi Aslanov stansiyası, 269 saylı məktəb, I. Zulfuqarov küç. 274"
     },
     {
-      "id": "r_13",
-      "code": "BUS-13",
-      "name": "B.AVTOVAĞZAL → Koroğlu m/st",
-      "transportType": "bus",
+      "code": "13",
       "origin": "B.AVTOVAĞZAL",
       "destination": "Koroğlu m/st",
       "firstDeparture": "06:00",
@@ -642,18 +513,10 @@
         "Metro Koroğlu (Milli Gimnastika Arenası)",
         "Koroğlu"
       ],
-      "status": "busy",
-      "occupancy": 53,
-      "delayRisk": "high",
-      "capacity": 110,
-      "avgDelayMinutes": 11,
-      "crowded": false
+      "stopsRaw": "Beynəlxalq Avtovağzal NMM dayanacaq 13, Bakı Beynəlxalq avtovağzal kompleksi, Biləcəri dairəsi, Shamahinka, Cəfər Cabbarlı adına kinostudiya, Tbilisi prospekti ev 187, Tbilisi pr., Çıraq plaza, Kimya şəhərciyi, Avrasia Hospital, Tədris və terapevtik klinika, Школа №47, Azneftkimyamaş ASC, H. Əliyev küç. 80, 71 saylı uşaq bağçası, №6 Uşaq Kliniki Xəstəxanası, Təhsil nazirliyi, Socar neft şirkəti, Nəqliyyatı intellektual idarəetmə mərkəzi, Yeni Klinika, Sofaz Tower 2, Heydər Əliyev prospekti 106a, Metro Koroğlu (Milli Gimnastika Arenası), Koroğlu"
     },
     {
-      "id": "r_14",
-      "code": "BUS-14",
-      "name": "B.AVTOVAĞZAL → 28 May m/st",
-      "transportType": "bus",
+      "code": "14",
       "origin": "B.AVTOVAĞZAL",
       "destination": "28 May m/st",
       "firstDeparture": "06:00",
@@ -689,18 +552,10 @@
         "Bakı Beynəlxalq avtovağzal kompleksi",
         "Beynəlxalq Avtovağzal NMM dayanacaq 13"
       ],
-      "status": "busy",
-      "occupancy": 86,
-      "delayRisk": "high",
-      "capacity": 110,
-      "avgDelayMinutes": 6,
-      "crowded": true
+      "stopsRaw": "28 May NMM D, TM 28 Mall, Mərkəzi Bank, Heydər Əliyev Sarayı, Qış parkı, Şixəli Qurbanov küçəsi, Улица Ахмедбекова. 11, Kaspian Plaza biznes mərkəzi, 54 saylı uşaq bağçası, Dövlət Statistika Komitəsi, Mədəniyyət və İncəsənət universiteti, Əbdürrəhim bəy Haqverdiyev 43, Əbdül Rəhim Haqverdiyev 11, Qəzənfər Musabəyov parkı, A.M. Şərifzadə, Yasamal bələdiyyəsi, Yasamal rayon telefon qovşağı, İnşaatçılar metrosu, Elmi Cərrahiyyə mərkəzi, 2 saylı tibb kolleci, Respublika məhkəmə-tibb ekspertizası, Respublika klinik xəstəxanası, 20 Yanvar metrosu, Cəfər Cabbarlı adına kinostudiya, 20 Yanvar 1, Biləcəri dairəsi, Bakı Beynəlxalq avtovağzal kompleksi, Beynəlxalq Avtovağzal NMM dayanacaq 13"
     },
     {
-      "id": "r_17",
-      "code": "BUS-17",
-      "name": "Yeni Yasamal → Kobia",
-      "transportType": "bus",
+      "code": "17",
       "origin": "Yeni Yasamal",
       "destination": "Kobia",
       "firstDeparture": "06:00",
@@ -743,18 +598,10 @@
         "Fətəli Xan Xoyski",
         "m/st Nəriman Nərimanov"
       ],
-      "status": "busy",
-      "occupancy": 76,
-      "delayRisk": "high",
-      "capacity": 130,
-      "avgDelayMinutes": 12,
-      "crowded": false
+      "stopsRaw": "Yeni Yasamal parkı (17 son dayanacağı), Məhəmməd Xiyabani 92, Məhəmməd Xiyabani 248, Məhəmməd Xiyabani 312, Yasamal Rayon Məşğulluq Xidməti, Elmi Cərrahiyyə mərkəzi, İnşaatçılar metrosu, 158 saylı məktəb, Akim Abbasov 68, Yasamal parkı, Avropa Azərbaycan məktəbi, Şəfayət Mehdiyev 107, Hüseyn Cavid 207, Elmlər Akademiyası metrosu, Hüseyn Cavid parkı, Mədəniyyət və İncəsənət universiteti, Mikayıl Müşfiq parkı, Nəriman Nərimanov prospekti ev 127, N. Nərimanov, prospekti, 101, Nərimanov heykəli, Bakı Avropa liseyi, Abdulla Şaiq 128, Abdulla Şaiq (Fuad İbrahimbəyov k.), 54 saylı uşaq bağçası, Улица Аббасгулу ага Бакиханова, Türkiyə Səfirliyi, Koroğlu parkı, Gənclik Mall, 5 Saylı Xəstəxana, Aşıq Molla Cuma, Əhməd Rəcəbli, Fətəli Xan Xoyski, m/st Nəriman Nərimanov"
     },
     {
-      "id": "r_20",
-      "code": "BUS-20",
-      "name": "Neftçilər parkı → Tibb Universiteti",
-      "transportType": "bus",
+      "code": "20",
       "origin": "Neftçilər parkı",
       "destination": "Tibb Universiteti",
       "firstDeparture": "06:00",
@@ -806,18 +653,10 @@
         "Qaraçuxur kəndinin Bələdiyyəsi",
         "Market Balli"
       ],
-      "status": "busy",
-      "occupancy": 86,
-      "delayRisk": "high",
-      "capacity": 130,
-      "avgDelayMinutes": 8,
-      "crowded": true
+      "stopsRaw": "1 saylı şəhər klinik xəstəxanası, 42 saylı məktəb, Nəsimi Bazarı, Dostluq kinoteatrı, Azərbaycanda ABŞ səfirliyi, Azadlıq Prospekti, 28 May NMM D, Muğan bağı, улица Александра Пушкина, Ağ Şəhər Bulvarı, Xəqani Rüstəmov 10, 8 Noyabr pr. 25, 8 Noyabr prospekti 141, AFFA, Nobel prospekti ev 22, AzərNeftYağ zavodu, Süleyman Əhmədov, Bakı İstilik Elektrik Mərkəzi, 59 saylı orta məktəb, Həzi Aslanov qəsəbəsi, Ziğ gəmi təmir zavodu, Ramiz Quliyev ev 10, Respublika Neyrocərrahiyyə Xəstəxanası, 245 nömrəli tam orta məktəb, Həzi Aslanov stansiyası, Məhəmməd Hadi, Heydər Əliyev parkı, Əliağa Şıxlinski, Şıxlinski ev 43, 48 saylı orta məktəb, Şıxlinski ev 92, Gəncə, Zeytun market, İnqilab İsmayılov, Supermarket Premiummart, Bakı əlilləri bərpa mərkəzi, Mərkəzi küçə, Yeni Günəş massivi D, FHN Yeni Günəşli, Mürsəl Kazimli, Azpetrol YDS, Mərkəzi, Qaraçuxur kəndinin Bələdiyyəsi, Market Balli"
     },
     {
-      "id": "r_21",
-      "code": "BUS-21",
-      "name": "Əhmədi m/st → 28 May m/st",
-      "transportType": "bus",
+      "code": "21",
       "origin": "Əhmədi m/st",
       "destination": "28 May m/st",
       "firstDeparture": "06:00",
@@ -865,18 +704,10 @@
         "Səməd Vurğun bağı",
         "28 May NMM D"
       ],
-      "status": "busy",
-      "occupancy": 92,
-      "delayRisk": "high",
-      "capacity": 130,
-      "avgDelayMinutes": 1,
-      "crowded": true
+      "stopsRaw": "Əhmədli metro, Məhəmməd Hadi, Ukrayna dairəsi, Vunqtau ev 2, 249 saylı məktəb, Vunqtau, Vunqtau 252, Dövlət Sərhəd xidməti akademiyası, Gəncə pr. (269 saylı məktəb), Gəncə prospekti ev 82, 257 saylı məktəb, Gəncə prospekti ev 322, Naxçıvanski adına hərbi liseyi, Ziğ yolu 29/49-cu məhəllə, Ziğ yolu ev 44, Ziğ yolu ev 34, 4 nömrəli Uşaq Poliklinikası, 38 nömrəli Şəhər Poliklinikası, Nobel prospekti, Həzi Aslanov qəsəbəsi, 59 saylı orta məktəb, Bakı İstilik Elektrik Mərkəzi, Süleyman Əhmədov, AzərNeftYağ zavodu, Nobel prospekti ev 22, AFFA, 8 Noyabr prospekti 141, 8 Noyabr pr. 25, Xəqani Rüstəmov 10, İzzət Orucova, Şah İsmayıl Xətai metrosu, Əmlak məsələləri dövlət komitəsi, Bakı şəhər baş polis idarəsi, 2 saylı Şəhər Klinik Xəstəxanası, Mərkəzi neftçilər xəstəxanası, Mehdi Mehdizadə, 1, 28 May (Səməd Vurğun bağı), Səməd Vurğun bağı, 28 May NMM D"
     },
     {
-      "id": "r_24",
-      "code": "BUS-24",
-      "name": "Qaraçuxur → Nərimanov m/st",
-      "transportType": "bus",
+      "code": "24",
       "origin": "Qaraçuxur",
       "destination": "Nərimanov m/st",
       "firstDeparture": "05:40",
@@ -924,18 +755,10 @@
         "m/st Nəriman Nərimanov",
         "Nərimanov rayon dövlət yanğından mühafizə xidmətinin bir hissəsi"
       ],
-      "status": "busy",
-      "occupancy": 42,
-      "delayRisk": "high",
-      "capacity": 130,
-      "avgDelayMinutes": 11,
-      "crowded": false
+      "stopsRaw": "Neftçilər parkı, 48 saylı poçt şöbəsi, Tibb-sanitariya şöbəsi №10, Əhməd Mehbalıyev, Qaraçuxur məscidi, Krılov, Orta məktəb №213, Lisey Kaspi, 252 saylı məktəb, Murad Nağıyev 96, Sabunçu rayonunun icra hakimiyyəti, Aura idman kompleksi, Səməd bəy Mehmandarov, Səməd bəy Mehmandarov ev 34, 81 Peşə məktəbi, Bakıxanov dəmir yolu stansiyası, Bakıxanov çörək zavodu, Atəşgah dairəsi, Asif Əsədullayev, 10 nömrəli peşə liseyi, Sabunçu dairəsi, Sabunçu qəsəbəsi (Azərbaycan), Bakı Olimpiya stadionu, Böyükşor bulvarı, Koroğlu, 73 saylı məktəb, Dərnəgül Sənayə Tikinti, Cəzaçəkmə Müəssisəsi N10, Baku Steel Company, Euro home, tikinti materialları bazarı, Chermetovsky körpüsü, Təkrar metal emalı zavodu, 93 saylı məktəb, Daxili Qoşunların Hərbi Hospitalı, Bakı Modern Təhsil Kompleksi, Azinco MTK yaşayış kompleksi, Metropark, m/st Nəriman Nərimanov, Nərimanov rayon dövlət yanğından mühafizə xidmətinin bir hissəsi"
     },
     {
-      "id": "r_30",
-      "code": "BUS-30",
-      "name": "C.Naxçivanski küç → S.Vurğun bağı",
-      "transportType": "bus",
+      "code": "30",
       "origin": "C.Naxçivanski küç",
       "destination": "S.Vurğun bağı",
       "firstDeparture": "05:30",
@@ -970,18 +793,10 @@
         "Səməd Vurğun bağı",
         "28 May NMM D"
       ],
-      "status": "busy",
-      "occupancy": 47,
-      "delayRisk": "high",
-      "capacity": 110,
-      "avgDelayMinutes": 13,
-      "crowded": false
+      "stopsRaw": "Cəmşid Naxçıvanski küç, Supermarket Shockmart, Elşən Süleymanov, Bəhruz Nuriyev, Bəhruz Nuriyev ev 417, Qarayev prospektinin Nuriyev küçəsi ilə kəsişməsi, Xalqlar Dostluğu metro stansiyası, 272 nömrəli məktəb, Avtomobil bazarı, Babək prospekti, 65a, Şərq motors, Embowood mağazası, 328 №-li tam orta məktəb, Cadillac, Bellona mebel mağazası, Monte Carlo restoranı, Kishlinsky məscidi, Tair Badalova, Babək pr. 26, Babək prospekti 28, Bravo supermarketi, Şah İsmayıl Xətai metrosu, Mərkəzi neftçilər xəstəxanası, 28 May (Səməd Vurğun bağı), Səməd Vurğun bağı, 28 May NMM D"
     },
     {
-      "id": "r_32",
-      "code": "BUS-32",
-      "name": "C.Naxçivanski küç → 28 May m/st",
-      "transportType": "bus",
+      "code": "32",
       "origin": "C.Naxçivanski küç",
       "destination": "28 May m/st",
       "firstDeparture": "05:45",
@@ -1025,18 +840,10 @@
         "Bazarstore supermarketi",
         "Riva mərkəzi"
       ],
-      "status": "watch",
-      "occupancy": 59,
-      "delayRisk": "medium",
-      "capacity": 130,
-      "avgDelayMinutes": 9,
-      "crowded": false
+      "stopsRaw": "28 May NMM D, Səməd Vurğun bağı, Kövkəb Səfərəliyeva, Port Baku, Yusif Səfərov, Azərbaycan Ali Məhkəməsi, Şah İsmayıl Xətai metrosu, İzzət Orucova, Əyləncə mərkəzi Megafun, Natiq Əliyev, Xəqani Rüstəmov 10, 8 Noyabr prospekti 141, AFFA, Nobel prospekti ev 22, AzərNeftYağ zavodu, Süleyman Əhmədov, Market Duygu, 194 saylı məktəb, Yulduz bazarı, Oqtay Vəliyev, 13 uşaq musiqi məktəbi, Avangard mağazası, Embowood mağazası, Şərq motors, Shahzada restoranı, 6-cı Keşlə, Bakı neft bazası, Nevay, Bakı neft emalı zavodu, Restoran Neon Palace, Xəzər universiteti, Neftçilər metrosu, Start idman kompleksi, Bakı market, Bazarstore supermarketi, Riva mərkəzi"
     },
     {
-      "id": "r_33",
-      "code": "BUS-33",
-      "name": "28 Mall t/m → Dərnəgül NMM",
-      "transportType": "bus",
+      "code": "33",
       "origin": "28 Mall t/m",
       "destination": "Dərnəgül NMM",
       "firstDeparture": "06:00",
@@ -1074,18 +881,10 @@
         "Mərkəzi Bank",
         "TM 28 Mall"
       ],
-      "status": "busy",
-      "occupancy": 74,
-      "delayRisk": "high",
-      "capacity": 110,
-      "avgDelayMinutes": 13,
-      "crowded": false
+      "stopsRaw": "Dərnəgül, Süleyman Sani Axundov ev. 453, Binəqədi rayon Gənclər və İdman idarəsi, Bolluq İK, Azadlıq prospekti metrostansiyası, Mərkəzi seçki komitəsi, Elite Mall, Dərnəgül yaşayış sahəsi, Atatürk ev 159, Istanbul oteli, 71 saylı uşaq bağçası, Gənclik Mall, Caspian Shopping Center, Metro Gənclik, Bakı Sağlamlıq Mərkəzi, Bakı Şəhər Təhsil İdarəsi, 1 saylı şəhər klinik xəstəxanası (Semaşko), Səhiyyə nazirliyi, Rusiya Səfirliyi, Sevil Qaziyeva parkı, Mehdi Hüseynzadə parkı, 3 saylı şəhər poliklinikası, Nizami metrosu, Şixəli Qurbanov küçəsi, Akademik milli dram teatri, Mərkəzi park, Şamsi Bədəlbəyli küçəsi, Heydər Əliyev Sarayı, Mərkəzi Bank, TM 28 Mall"
     },
     {
-      "id": "r_35",
-      "code": "BUS-35",
-      "name": "Suraxanı → R.Quliyev küç.",
-      "transportType": "bus",
+      "code": "35",
       "origin": "Suraxanı",
       "destination": "R.Quliyev küç.",
       "firstDeparture": "05:45",
@@ -1132,18 +931,10 @@
         "Xətai Rayon Sukanal idarəsi",
         "R.Məmmədov küç. 4"
       ],
-      "status": "watch",
-      "occupancy": 45,
-      "delayRisk": "medium",
-      "capacity": 130,
-      "avgDelayMinutes": 7,
-      "crowded": false
+      "stopsRaw": "35 nömrəli avtobusun Köhnə Suraxanıda son dayanacağı, Suraxanı qəsəbəsi (Azərbaycan), Suraxanı Bazarı, Suraxanı dairəsi, Surahani, 85 nömrəli məktəb, Tofiq Bayram parkı, Tofiq Bayram bağı, Suraxanı Rayon Məhkəməsi, Amirjan elektrik trafosu, Əmircan, Bizim supermarketi, 2-ci Bülbülə, Bülbül, Komsomol dairəsi, Bakıxanov çörək zavodu, Bakıxanov dəmir yolu stansiyası, 81 Peşə məktəbi, Səməd bəy Mehmandarov ev 34, Səməd bəy Mehmandarov, Aura idman kompleksi, Sabunçu rayonunun icra hakimiyyəti, 3 nömrəli uşaq stomatoloji klinikası, Bakı sosial-iqtisadi kolleci, Benzin doldurma stansiyası Lukoil, Start idman kompleksi, Neftçilər metrosu, Qara Qarayev prospekti, Q.Qarayev pr. B.Nuriyev küç. ilə kəsişmə, Qarayev prospektinin Nuriyev küçəsi ilə kəsişməsi, Xalqlar Dostluğu metro stansiyası, Sərhədçi İdman Olimpiya Mərkəzi, 64 saylı məktəb, Əhmədli metro, Ukrayna dairəsi, Aşıq Ələsgər ev 4, Radiozavod, Xətai Rayon Sukanal idarəsi, R.Məmmədov küç. 4"
     },
     {
-      "id": "r_44",
-      "code": "BUS-44",
-      "name": "Suraxanı → Neftçilər m/st",
-      "transportType": "bus",
+      "code": "44",
       "origin": "Suraxanı",
       "destination": "Neftçilər m/st",
       "firstDeparture": "05:40",
@@ -1199,18 +990,10 @@
         "Poliklinika №13",
         "Elxan Həsənov küçəsi"
       ],
-      "status": "busy",
-      "occupancy": 64,
-      "delayRisk": "high",
-      "capacity": 130,
-      "avgDelayMinutes": 14,
-      "crowded": false
+      "stopsRaw": "Azər Manafov küç. 62, Qara Qarayev metrosu, Zabitlər parkı, Qara Qarayev 44, Neftçilər metrosu, Qara Qarayev prospekti, Q.Qarayev pr. B.Nuriyev küç. ilə kəsişmə, Qarayev prospektinin Nuriyev küçəsi ilə kəsişməsi, Xalqlar Dostluğu metro stansiyası, Sərhədçi İdman Olimpiya Mərkəzi, 64 saylı məktəb, Əhmədli metro, Ukrayna dairəsi, Vunqtau ev 2, 249 saylı məktəb, Vunqtau 252, Dövlət Sərhəd xidməti akademiyası, Gəncə pr. (269 saylı məktəb), Gəncə prospekti ev 82, 257 saylı məktəb, Gəncə prospekti ev 322, Naxçıvanski adına hərbi liseyi, Cəmşid Naxçıvanski adına hərbi lisey, Zeytun bağı, Hövsan şossesi, Zığ dairəsi, 65 saylı məktəb, Yeni Zığ yaşayış kompleksi, Transgate, Vərəm müalicəsi №6, Zığ yolu, 317 saylı orta məktəb, Avtobus parkı, Zığ şosesi Mədən küçəsi ilə kəsişmə, Suraxanı qəsəbəsi (Azərbaycan), ATEF, Əfsun restoranı, Neft emalı zavodu Caspian Oil, Atamoğlan Rzayev Küçəsi, Suraxanı rayon hərbi komissarlığı, Surahani, Amirjan qəsəbəsi, Suraxanı dairəsi, Malik Mustafayev küçəsi, Stadion Azersun Arena, Suraxanı rayon prokurorluğu, Poliklinika №13, Elxan Həsənov küçəsi"
     },
     {
-      "id": "r_46",
-      "code": "BUS-46",
-      "name": "256 məktəb → 28 May m/st",
-      "transportType": "bus",
+      "code": "46",
       "origin": "256 məktəb",
       "destination": "28 May m/st",
       "firstDeparture": "06:00",
@@ -1259,18 +1042,10 @@
         "Gəncə",
         "İnqilab İsmayılov"
       ],
-      "status": "watch",
-      "occupancy": 53,
-      "delayRisk": "medium",
-      "capacity": 130,
-      "avgDelayMinutes": 8,
-      "crowded": false
+      "stopsRaw": "28 May NMM D, улица Александра Пушкина, Yusif Səfərov, Azərbaycan Ali Məhkəməsi, Şah İsmayıl Xətai metrosu, İzzət Orucova, Əyləncə mərkəzi Megafun, Natiq Əliyev, Xəqani Rüstəmov 10, 8 Noyabr prospekti 141, Nobel prospekti ev 22, AzərNeftYağ zavodu, Süleyman Əhmədov, Bakı İstilik Elektrik Mərkəzi, 59 saylı orta məktəb, Həzi Aslanov qəsəbəsi, Nobel prospekti, Ziğ gəmi təmir zavodu, Ramiz Quliyev ev 10, Respublika Neyrocərrahiyyə Xəstəxanası, R.Məmmədov küç. 4, 86 saylı orta məktəb, Radiozavod, Aşıq Ələsgər ev 4, Ukrayna dairəsi, Əhmədli metro, Sarayevo küçəsi, 85, Grandmart, Neapol dairəsi, Kafe Petek, Karvan, Market Real, 264 saylı məktəb, Səməd bəy Mehmandarov küçəsi 111, 263 saylı orta məktəb, Bizim mağazası, Supermarket Premiummart, 265 saylı orta məktəb, Gəncə, İnqilab İsmayılov"
     },
     {
-      "id": "r_57",
-      "code": "BUS-57",
-      "name": "Bakıxanov → Asiman",
-      "transportType": "bus",
+      "code": "57",
       "origin": "Bakıxanov",
       "destination": "Asiman",
       "firstDeparture": "06:00",
@@ -1311,18 +1086,10 @@
         "Qardaşlar market",
         "Şərabçılıq"
       ],
-      "status": "busy",
-      "occupancy": 78,
-      "delayRisk": "high",
-      "capacity": 110,
-      "avgDelayMinutes": 14,
-      "crowded": false
+      "stopsRaw": "Bakıxanov dəmir yolu stansiyası, 81 Peşə məktəbi, Səməd bəy Mehmandarov ev 34, Səməd bəy Mehmandarov, Aura idman kompleksi, Sabunçu rayonunun icra hakimiyyəti, Aygun Bazar store, 252 №-li tam orta məktəb, Sakit Qocayev, Bakı neft-energetika kolleci, Benzin doldurma stansiyası Lukoil, Start idman kompleksi, Neftçilər metrosu, Qara Qarayev prospekti, Q.Qarayev pr. B.Nuriyev küç. ilə kəsişmə, Qarayev prospektinin Nuriyev küçəsi ilə kəsişməsi, Xalqlar Dostluğu metro stansiyası, Sərhədçi İdman Olimpiya Mərkəzi, 64 saylı məktəb, Əhmədli metro, Ukrayna dairəsi, 254 saylı məktəb, Həzi Aslanov stansiyası, Ç. Kərimov 3, X.Məmmədov, R.Məmmədov küç. 4, Ramiz Quliyev küçəsi, Respublika Neyrocərrahiyyə Xəstəxanası, Nargilə dairəsi, Nobel prospekti, Həzi Aslanov qəsəbəsi, Qardaşlar market, Şərabçılıq"
     },
     {
-      "id": "r_60",
-      "code": "BUS-60",
-      "name": "221 məktəb → Koroğlu NMM",
-      "transportType": "bus",
+      "code": "60",
       "origin": "221 məktəb",
       "destination": "Koroğlu NMM",
       "firstDeparture": "06:00",
@@ -1370,18 +1137,10 @@
         "Ziğ sağlamlıq mərkəzinin poliklinikası",
         "221 saylı orta məktəb"
       ],
-      "status": "stable",
-      "occupancy": 51,
-      "delayRisk": "low",
-      "capacity": 130,
-      "avgDelayMinutes": 3,
-      "crowded": false
+      "stopsRaw": "Metro Koroğlu (Milli Gimnastika Arenası), Peşə yüksəkokulu Profi Resource, Bəşir Bünyadov, Restoran Hellas, San tea, Sabunçu qəsəbəsi (Azərbaycan), AzVirt, Mohito restoran, Bakıxanov dəmir yolu stansiyası, Oskar Əfəndiyev, 2 saylı doğum evi, Ali Kerim, 96 saylı orta məktəb, Bakı sosial-iqtisadi kolleci, Benzin doldurma stansiyası Lukoil, Start idman kompleksi, Neftçilər metrosu, Qara Qarayev prospekti, Q.Qarayev pr. B.Nuriyev küç. ilə kəsişmə, Qarayev prospektinin Nuriyev küçəsi ilə kəsişməsi, Xalqlar Dostluğu metro stansiyası, Sərhədçi İdman Olimpiya Mərkəzi, 64 saylı məktəb, Əhmədli metro, Ukrayna dairəsi, Vunqtau ev 2, 249 saylı məktəb, Vunqtau, Vunqtau 252, Dövlət Sərhəd xidməti akademiyası, Gəncə pr. (269 saylı məktəb), Gəncə prospekti ev 82, 257 saylı məktəb, Gəncə prospekti ev 322, Naxçıvanski adına hərbi liseyi, Cəmşid Naxçıvanski adına hərbi lisey, Azərbaycan ali hərbi məktəbi, Polad Həşimov ev.32, Ziğ sağlamlıq mərkəzinin poliklinikası, 221 saylı orta məktəb"
     },
     {
-      "id": "r_62",
-      "code": "BUS-62",
-      "name": "N.Tusi küç → Sabunçu d/st",
-      "transportType": "bus",
+      "code": "62",
       "origin": "N.Tusi küç",
       "destination": "Sabunçu d/st",
       "firstDeparture": "05:40",
@@ -1418,18 +1177,10 @@
         "Nəsrəddin Tusi ev. 108",
         "5 nömrəli məktəb"
       ],
-      "status": "watch",
-      "occupancy": 69,
-      "delayRisk": "medium",
-      "capacity": 110,
-      "avgDelayMinutes": 4,
-      "crowded": false
+      "stopsRaw": "Sabunçu dəmir yol stansiyası, Sabunçu Qəsəbə (Azərbaycan), Supermarket Rahat, 3 Saylı Şəhər Klinik Xəstəxanası, Asif Əsədullayev, Sabunçu dairəsi, Metro Koroğlu (Milli Gimnastika Arenası), Koroğlu, 4-cü, Xəlil Rza Ulutürk, Bakı nəqliyyat agentliyi, DİN 2 saylı poliklinikası, Bakı Olimpiya stadionu, 12 saylı orta məktəb, Zabitlər parkı, Qara Qarayev 44, Neftçilər metrosu, Qara Qarayev prospekti, Q.Qarayev pr. B.Nuriyev küç. ilə kəsişmə, Qarayev prospektinin Nuriyev küçəsi ilə kəsişməsi, Xalqlar Dostluğu metro stansiyası, Sərhədçi İdman Olimpiya Mərkəzi, 64 saylı məktəb, Əhmədli metro, Ukrayna dairəsi, 181 saylı uşaq bağçası, Orta məktəb 260, Nəsrəddin Tusi ev. 108, 5 nömrəli məktəb"
     },
     {
-      "id": "r_72",
-      "code": "BUS-72",
-      "name": "Günəşli qəs → Sədərək t/m",
-      "transportType": "bus",
+      "code": "72",
       "origin": "Günəşli qəs",
       "destination": "Sədərək t/m",
       "firstDeparture": "06:00",
@@ -1487,18 +1238,10 @@
         "Bizim mağazası",
         "Supermarket Premiummart"
       ],
-      "status": "watch",
-      "occupancy": 65,
-      "delayRisk": "medium",
-      "capacity": 130,
-      "avgDelayMinutes": 3,
-      "crowded": false
+      "stopsRaw": "Sederek Mall, Yaşıl Şəhər, Aqua park Shikhov, Velopark, Bibiheybət Məscidi, Bibiheybət buxtası, Bakı ali neft məktəbi, Kaspi təhsil mərkəzi, Yeni Salyan Yolu ev 16, 118 saylı elektrik yarımstansiyası, Su idmanı sarayı, Səbail Meydanı, Dövlət Bayrağı Meydanı, Səbail rayon dövlət yanğından mühafizə hissəsi, Riviera restoran, Azneft Meydanı, Kukla teatri, Sahil metrosu, Baku City Tour, Bakı Dəniz Vağzalı, Neftçilər, Ağ Şəhər Bulvarı, Xəqani Rüstəmov 10, 8 Noyabr pr. 25, 8 Noyabr prospekti 141, AFFA, Nobel prospekti ev 22, AzərNeftYağ zavodu, Süleyman Əhmədov, Bakı İstilik Elektrik Mərkəzi, 59 saylı orta məktəb, Həzi Aslanov qəsəbəsi, Nobel prospekti, Ziğ gəmi təmir zavodu, Ramiz Quliyev ev 10, Respublika Neyrocərrahiyyə Xəstəxanası, R.Məmmədov küç. 4, 86 saylı orta məktəb, Radiozavod, Aşıq Ələsgər ev 4, Neapol dairəsi, Kafe Petek, Karvan, Market Real, 264 saylı məktəb, Səməd bəy Mehmandarov küçəsi 111, Günəşli yarımstansiyası, 263 saylı orta məktəb, Bizim mağazası, Supermarket Premiummart"
     },
     {
-      "id": "r_88",
-      "code": "BUS-88",
-      "name": "DƏRNƏGÜL m/st → 20-ci Sahə",
-      "transportType": "bus",
+      "code": "88",
       "origin": "DƏRNƏGÜL m/st",
       "destination": "20-ci Sahə",
       "firstDeparture": "06:00",
@@ -1545,18 +1288,10 @@
         "23 nömrəli poçt şöbəsi",
         "20-ci Sahə dairəsi"
       ],
-      "status": "busy",
-      "occupancy": 73,
-      "delayRisk": "high",
-      "capacity": 130,
-      "avgDelayMinutes": 14,
-      "crowded": false
+      "stopsRaw": "Dərnəgül, Süleyman Sani Axundov ev. 453, Abay Kunanbayev, Azerbaijan International University, Abay Kunanbayev ev 66, Tayqa Ticarət, supermarket, Bravo, supermarket, Bolluq İK, Azadlıq prospekti metrostansiyası, Mərkəzi seçki komitəsi, Bakı Tennis Akademiyası, 135 saylı orta məktəb, Bakı turizm peşə məktəbi, Targül Mall, Siyasi sənədlər arxivi idarəsi, Baku city villas, Nərimanov Rayon qeydiyyat şöbəsi, Bakı Sağlamlıq Mərkəzi, Nəsimi Bazarı, Dostluq kinoteatrı, Azərbaycanda ABŞ səfirliyi, Azadlıq Prospekti, 28 May NMM D, Muğan bağı, улица Александра Пушкина, Sahil metrosu, Bəyaz zanbaqlar parkı, Azneft meydanı, Riviera restoran, Səbail rayon dövlət yanğından mühafizə hissəsi, 5 saylı doğum evi, Səbail Meydanı, Su idmanı mərkəzi, Səbail DYP, Səbail rayon mühafizə idarəsi, 23 nömrəli poçt şöbəsi, 20-ci Sahə dairəsi"
     },
     {
-      "id": "r_88a",
-      "code": "BUS-88A",
-      "name": "28 May m/st → Azadlıq m/st",
-      "transportType": "bus",
+      "code": "88A",
       "origin": "28 May m/st",
       "destination": "Azadlıq m/st",
       "firstDeparture": "06:00",
@@ -1587,18 +1322,10 @@
         "8 Noyabr pr. 25",
         "Luna Park"
       ],
-      "status": "watch",
-      "occupancy": 75,
-      "delayRisk": "medium",
-      "capacity": 110,
-      "avgDelayMinutes": 3,
-      "crowded": false
+      "stopsRaw": "Azadlıq prospekti metrostansiyası, Bakı Tennis Akademiyası, 135 saylı orta məktəb, Bakı turizm peşə məktəbi, Targül Mall, Siyasi sənədlər arxivi idarəsi, Baku city villas, Nərimanov Rayon qeydiyyat şöbəsi, Bakı Sağlamlıq Mərkəzi, Bakı Şəhər Təhsil İdarəsi, 1 saylı şəhər klinik xəstəxanası (Semaşko), Richard Sorge parkı, Zabitlər parkı, Təzə bazar, Heydər Əliyev Sarayı, Mərkəzi Bank, 28 May NMM D, Muğan bağı, улица Александра Пушкина, Ağ Şəhər Bulvarı, Xəqani Rüstəmov 10, 8 Noyabr pr. 25, Luna Park"
     },
     {
-      "id": "r_108a",
-      "code": "BUS-108A",
-      "name": "Fatmayi q. → Azadlıq m/st",
-      "transportType": "bus",
+      "code": "108A",
       "origin": "Fatmayi q.",
       "destination": "Azadlıq m/st",
       "firstDeparture": "05:50",
@@ -1639,18 +1366,10 @@
         "Market Goradil",
         "108A"
       ],
-      "status": "watch",
-      "occupancy": 81,
-      "delayRisk": "medium",
-      "capacity": 110,
-      "avgDelayMinutes": 5,
-      "crowded": true
+      "stopsRaw": "Azadlıq prospekti metrostansiyası, Mərkəzi seçki komitəsi, 143 saylı orta məktəb, 99 saylı orta məktəb, Banıçiçək Sarayı, White Palace, Zəngəzur Saray, Dairəvi yol 14, Market Lider, Bineqedi Qəsəbə (Bakı şəhərlər, Azərbaycan), Üfqi Emalatxanası, Yük maşını park, Mehdiabad Moll, Mehdiabad qəsəbəsi (Azərbaycan), Digyakhskaya, Supermarket Kərim, İst petrol, Market Syama, Mehdiabad Fatmai, Mehdiabad gölü, Market Oba, Fatmai qəsəbəsi (Azərbaycan), Dadaş Bünyadzadə adına məktəb, Fatmain qəbiristanlığı, Fatmayı Məscidi, Restoran Palma, Supermarket Dyaniz, Goradil qəsəbəsi (Azərbaycan), Xəzər mağazası, Görədil market, Market Goradil, 108A"
     },
     {
-      "id": "r_120",
-      "code": "BUS-120",
-      "name": "Hövsan y/k → 28 May m/st",
-      "transportType": "bus",
+      "code": "120",
       "origin": "Hövsan y/k",
       "destination": "28 May m/st",
       "firstDeparture": "05:45",
@@ -1675,18 +1394,10 @@
         "Sederek Mall",
         "Elite Mall"
       ],
-      "status": "busy",
-      "occupancy": 93,
-      "delayRisk": "high",
-      "capacity": 90,
-      "avgDelayMinutes": 1,
-      "crowded": true
+      "stopsRaw": "Səbail Meydanı, Su idmanı mərkəzi, Səbail DYP, Səbail rayon mühafizə idarəsi, 23 nömrəli poçt şöbəsi, 20-ci Sahə dairəsi, 51 saylı məktəb, Ö.F.Nemanzadə, Səbail Maşınqayırma zavodu, Bibiheybət Məscidi, Khazri Motel, Velopark, Aqua park Shikhov, Grand park, Yaşıl Şəhər, Sederek Mall, Elite Mall"
     },
     {
-      "id": "r_120e",
-      "code": "BUS-120E",
-      "name": "Hövsan qəs → 28 May m/st",
-      "transportType": "bus",
+      "code": "120E",
       "origin": "Hövsan qəs",
       "destination": "28 May m/st",
       "firstDeparture": "06:30",
@@ -1708,18 +1419,10 @@
         "Mərkəzi Neftçilər Xəstəxanası",
         "28 May metrostansiyası"
       ],
-      "status": "stable",
-      "occupancy": 59,
-      "delayRisk": "low",
-      "capacity": 90,
-      "avgDelayMinutes": 3,
-      "crowded": false
+      "stopsRaw": "Polis bölməsi, Hövsan Parkı, Bük, Hövsan olimpiya idman kompleksi, Vətən küçəsi, Muğan küçəsi, Hövsan 2, Zığ qəsəbəsi, Naxçıvanski adına hərbi lisey - 2, Zığ yolu, 16, ASAN xidmət № 2, Mərkəzi Neftçilər Xəstəxanası, 28 May metrostansiyası"
     },
     {
-      "id": "r_121e",
-      "code": "BUS-121E",
-      "name": "Hövsan Mida → Əhmədi m/st",
-      "transportType": "bus",
+      "code": "121E",
       "origin": "Hövsan Mida",
       "destination": "Əhmədi m/st",
       "firstDeparture": "06:30",
@@ -1736,18 +1439,10 @@
         "Vətən küçəsi",
         "Hövsan 2"
       ],
-      "status": "busy",
-      "occupancy": 96,
-      "delayRisk": "high",
-      "capacity": 90,
-      "avgDelayMinutes": 9,
-      "crowded": true
+      "stopsRaw": "Məhəmməd Hadi küçəsi, Zığ dairəsi, Bük, BakuBus MMC, Rasim Şahsuvarov küçəsi, Hövsan Parkı, Hövsan olimpiya idman kompleksi, Vətən küçəsi, Hövsan 2"
     },
     {
-      "id": "r_125",
-      "code": "BUS-125",
-      "name": "28 May m/st → Lökbatan qəs",
-      "transportType": "bus",
+      "code": "125",
       "origin": "28 May m/st",
       "destination": "Lökbatan qəs",
       "firstDeparture": "06:00",
@@ -1793,18 +1488,10 @@
         "Market Yunus",
         "139 nömrəli məktəb"
       ],
-      "status": "busy",
-      "occupancy": 45,
-      "delayRisk": "high",
-      "capacity": 130,
-      "avgDelayMinutes": 13,
-      "crowded": false
+      "stopsRaw": "28 May NMM D, улица Александра Пушкина, Sahil metrosu, Bəyaz zanbaqlar parkı, Azneft meydanı, Riviera restoran, Səbail rayon dövlət yanğından mühafizə hissəsi, 5 saylı doğum evi, Səbail Meydanı, Su idmanı mərkəzi, Səbail DYP, Səbail rayon mühafizə idarəsi, 23 nömrəli poçt şöbəsi, 20-ci Sahə dairəsi, \"BNG Petrol\" yanacaqdoldurma məntəqəsi, 118 saylı elektrik yarımstansiyası, Yeni Salyan Yolu ev 16, Yeni Salyan Yolu ev 22, Bakı ali neft məktəbi, Bibiheybət buxtası, Bibiheybət Məscidi, Khazri Motel, Velopark, Aqua park Shikhov, Grand park, Yaşıl Şəhər, Bakı baş gömrük idarəsi, XDG Təlim-Tədris Mərkəzi, Binə Mall, Bazarstore, Qaradağ rayon polis idarəsi, Araz Petrol, Qaradağ Saray, Cırtdan parkı, Kingsmart supermarket, Lökbatan qəsəbəsi (Azərbaycan), Market Yunus, 139 nömrəli məktəb"
     },
     {
-      "id": "r_130",
-      "code": "BUS-130",
-      "name": "Lökbatan qəs → 20 Yanvar m/st",
-      "transportType": "bus",
+      "code": "130",
       "origin": "Lökbatan qəs",
       "destination": "20 Yanvar m/st",
       "firstDeparture": "05:50",
@@ -1842,18 +1529,10 @@
         "Cəfər Cabbarlı adına kinostudiya",
         "20 Yanvar metrosu"
       ],
-      "status": "busy",
-      "occupancy": 89,
-      "delayRisk": "high",
-      "capacity": 110,
-      "avgDelayMinutes": 2,
-      "crowded": true
+      "stopsRaw": "Yeni evlər, Lökbatan qəsəbəsi (Azərbaycan), 288 nömrəli məktəb, Market Borçalı, Restoran Daniz, Market Al, Oba Market, Kingsmart supermarket, Onlara uşaq bağçası. Daşqın Byakirova, Market Köhnya, Cırtdan parkı, Market Yunus, Qaradağ Saray, Araz Petrol, Апшерон, Sederek Mall, Meyvəli Mall, Xocəsən elektrik yarımstansiyası, MSU Bakı filialı, Ruslan Allahverdiyev, 103 nömrəli məktəb, Zeytun bazarı, Sahil, Xocəsən qəsəbəsi (Azərbaycan), Xocəsən sağlamlıq mərkəzi, Xocasani körpüsü, Xocəsən dairəsi, Shamahinka, Cəfər Cabbarlı adına kinostudiya, 20 Yanvar metrosu"
     },
     {
-      "id": "r_139",
-      "code": "BUS-139",
-      "name": "Koroğlu m/st → Savalan",
-      "transportType": "bus",
+      "code": "139",
       "origin": "Koroğlu m/st",
       "destination": "Savalan",
       "firstDeparture": "05:40",
@@ -1892,18 +1571,10 @@
         "Metro Koroğlu (Milli Gimnastika Arenası)",
         "Koroğlu"
       ],
-      "status": "watch",
-      "occupancy": 76,
-      "delayRisk": "medium",
-      "capacity": 110,
-      "avgDelayMinutes": 5,
-      "crowded": false
+      "stopsRaw": "28 saylı məktəb, Savalan qəsəbəsi (Azərbaycan), Məzahir Abdullayev, Market Kənan, Market Vüqar, Market İlkin, Tərəqqi 3-cü döngə, Araz Supermarketi, Maştağa Olimpiya idman kompleksi, Dövlət Gömrük Komitəsinin Akademiyası, Zabrat mall, Zabrat qəsəbəsi (Azərbaycan), Seyid market, 75 saylı orta məktəb, Kübar market, DYP Sabunçu rayon Şöbəsi, Bakı Neftmaş Zavodu ASC, Zabrat 1 stansiyası, 15 nömrəli peşə liseyi, Yeni Nəsil Tədris Mərkəzi, Rahat market, Zabrat-1 qəsəbəsi (Azərbaycan), Balaxanı yolu, Sabunçu Qəsəbə (Azərbaycan), Ramana yolu, ABU Petrol, Socar Ekoloji Monitorinq Departamenti, Bolmart, Sabunçu dairəsi, Metro Koroğlu (Milli Gimnastika Arenası), Koroğlu"
     },
     {
-      "id": "r_140",
-      "code": "BUS-140",
-      "name": "Koroğlu m/st → Şüvəlan qəs",
-      "transportType": "bus",
+      "code": "140",
       "origin": "Koroğlu m/st",
       "destination": "Şüvəlan qəs",
       "firstDeparture": "05:30",
@@ -1956,18 +1627,10 @@
         "Xokmelyn dairəsi",
         "Xırdalan stansiyası"
       ],
-      "status": "busy",
-      "occupancy": 83,
-      "delayRisk": "high",
-      "capacity": 130,
-      "avgDelayMinutes": 12,
-      "crowded": true
+      "stopsRaw": "Lökbatan cümə Məscidi, Lökbatan qəsəbəsi (Azərbaycan), 1-ci keçid, 166 saylı məktəb, Zaur restoranı, Lökbatan mədəniyyət sarayı, Heydər Əliyev parkı, Market Yunus, Kingsmart supermarket, Cırtdan parkı, Qaradağ Saray, Lökbatan-Qobu yolu, Qobu park, Qobu Park yaşayış kompleksi, Lökbatan-Qobu trassa, Bəkir Çobanzadə, Qobu qəsəbəsi (Azərbaycan), Əliağa Vahid, Qasim bəy Zakir, Məhəmməd Füzuli, Xurşidbanu Natəvan, Aşur Həsənbəyov, Xanlar Muradov, Ismət Qayıbov, Qara Qarayev, Telman Sahibcanov, İmam Hüseyn məscidi, Qobu Qəbiristanlığı, Sona Salmanova, Qobun yolu, Сəfər Cabbarli, Atyalı qəsəbəsi (Azərbaycan), 27-ci küçə, Hökməli qəsəbəsi (Azərbaycan), Mircəmil Miriyev, 20 Yanvar, Əhməd Cavad, Hüseyn Cavid ev 24, 4-cü küçə, Dədə Qorqud, 2-ci küçə, Hökməli qəsəbə Tağı, Yeni Sulutəpə qəsəbəsi (Azərbaycan), Xokmelyn dairəsi, Xırdalan stansiyası"
     },
     {
-      "id": "r_140e",
-      "code": "BUS-140E",
-      "name": "Koroğlu m/st → Mərdəkan qəs",
-      "transportType": "bus",
+      "code": "140E",
       "origin": "Koroğlu m/st",
       "destination": "Mərdəkan qəs",
       "firstDeparture": "06:30",
@@ -1984,18 +1647,10 @@
         "Dendrologiya İnstitutu",
         "Mərdəkan Mədəniyyət Sarayı"
       ],
-      "status": "busy",
-      "occupancy": 41,
-      "delayRisk": "high",
-      "capacity": 90,
-      "avgDelayMinutes": 10,
-      "crowded": false
+      "stopsRaw": "Koroğlu Nəqliyyat Mübadilə mərkəzi · 1B, Milli aviasiya akademiyası, Bük, Olimpiya idman kompleksi, Sergey Yesenin küçəsi, 56, 26 nömrəli Birləşmiş Şəhər Xəstəxanası, Dendrologiya İnstitutu, Mərdəkan Mədəniyyət Sarayı"
     },
     {
-      "id": "r_141e",
-      "code": "BUS-141E",
-      "name": "Koroğlu m/st → Qala qəs",
-      "transportType": "bus",
+      "code": "141E",
       "origin": "Koroğlu m/st",
       "destination": "Qala qəs",
       "firstDeparture": "06:00",
@@ -2045,18 +1700,10 @@
         "Dübəndi Stansiyası",
         "Südçülük qəsəbəsi (Azərbaycan)"
       ],
-      "status": "watch",
-      "occupancy": 65,
-      "delayRisk": "medium",
-      "capacity": 130,
-      "avgDelayMinutes": 2,
-      "crowded": false
+      "stopsRaw": "Koroğlu, 4-cü, Xəlil Rza Ulutürk, Bakı nəqliyyat agentliyi, Böyükşor bulvarı, Socar Neft bazası, Sabunçu dairəsi, Sabunçu qəsəbəsi (Azərbaycan), Komsomol dairəsi, Socar avtoparki, 16 saylı islah müəssisəsi, Təbiət parkı, Socar Petrol, Suraxanı qəsəbəsi (Azərbaycan), Bakı ekspo mərkəzi, Milli aviasiya akademiyası, Bina kəndi keçidi, Grandmart, Binə qəsəbəsi (Azərbaycan), Binə atçılıq mərkəzi, Qala Bazar, Qala Parkı, Cahargah hotel, Qala Stansiyası, Qala maşınqayırma zavodu, Evkur mall, Market Abşeron, Qala qəsəbəsi (Azərbaycan), Qala t/m, Qala qəsəbəsi, Nihat Market, Qala dairəsi, Xaşaxuna bağları Dübəndi yolu, Xaşaxuna bağları, Xaşaxuna qəsəbəsi (Azərbaycan), Qala Broyler MMC, AL Market, Dübəndi qəsəbəsi (Azərbaycan), Qala Aerodromu, Südçülük sovxozu, Dübəndi Stansiyası, Südçülük qəsəbəsi (Azərbaycan)"
     },
     {
-      "id": "r_149",
-      "code": "BUS-149",
-      "name": "Sahil qəs → Sahil m/st",
-      "transportType": "bus",
+      "code": "149",
       "origin": "Sahil qəs",
       "destination": "Sahil m/st",
       "firstDeparture": "06:10",
@@ -2096,18 +1743,10 @@
         "Emin Quliyev",
         "Sahil qəsəbəsi"
       ],
-      "status": "stable",
-      "occupancy": 48,
-      "delayRisk": "low",
-      "capacity": 110,
-      "avgDelayMinutes": 1,
-      "crowded": false
+      "stopsRaw": "Sahil metrosu, Bəyaz zanbaqlar parkı, Riviera restoran, Səbail rayon dövlət yanğından mühafizə hissəsi, Səbail DYP, Səbail rayon mühafizə idarəsi, 23 nömrəli poçt şöbəsi, 20-ci Sahə dairəsi, Bibiheybət yolu, Ö.F.Nemanzadə, Səbail Maşınqayırma zavodu, Bibiheybət Məscidi, Khazri Motel, Velopark, Aqua park Shikhov, Grand park, Yaşıl Şəhər, Bakı baş gömrük idarəsi, XDG Təlim-Tədris Mərkəzi, Binə Mall, MAN Azərbaycan, Bakı gəmiqayırma zavodu, Monteneqro Inn, Xəzər Aysland, 5 saylı uşaq incəsənət məktəbi, Sahil qəsəbəsi (Azərbaycan), Oba market, Yeni Sahil t/m, Sahil Bulvarı, 15 saylı uşaq bağçası, Emin Quliyev, Sahil qəsəbəsi"
     },
     {
-      "id": "r_150",
-      "code": "BUS-150",
-      "name": "Bilgəh qəs → Koroğlu m/st",
-      "transportType": "bus",
+      "code": "150",
       "origin": "Bilgəh qəs",
       "destination": "Koroğlu m/st",
       "firstDeparture": "05:30",
@@ -2146,18 +1785,10 @@
         "MTN-sanatoriya",
         "Bilgəh kardioloji sanatoriyası"
       ],
-      "status": "busy",
-      "occupancy": 88,
-      "delayRisk": "high",
-      "capacity": 110,
-      "avgDelayMinutes": 7,
-      "crowded": true
+      "stopsRaw": "Metro Koroğlu (Milli Gimnastika Arenası), Sabunçu dairəsi, Sabunçu qəsəbəsi (Azərbaycan), Komsomol dairəsi, Socar avtoparki, 16 saylı islah müəssisəsi, Təbiət parkı, Socar Petrol, Suraxanı qəsəbəsi (Azərbaycan), Bakı ekspo mərkəzi, Milli aviasiya akademiyası, Bina kəndi keçidi, Grandmart, Binə qəsəbəsi (Azərbaycan), Binə atçılıq mərkəzi, Rahat market, Daxili İşlər Nazirliyi Daxili Qoşunların Ali Hərbi Məktəbi, Ayşən LTD, Şağan qəsəbəsi (Azərbaycan), Şağan qəsəbəsi, Almet Qarden mağazası, Nadir Axunov, Sabunçu Qəsəbə (Azərbaycan), Rahat supermarket, Buzovna Qəsəbə (Azərbaycan), 26 saylı məktəb, Zaqulba qəsəbəsi (Azərbaycan), Ticarət mərkəzi Zağulba Mall, Zağulba parkı, MTN-sanatoriya, Bilgəh kardioloji sanatoriyası"
     },
     {
-      "id": "r_163",
-      "code": "BUS-163",
-      "name": "Ramana qəs → Koroğlu m/st",
-      "transportType": "bus",
+      "code": "163",
       "origin": "Ramana qəs",
       "destination": "Koroğlu m/st",
       "firstDeparture": "05:40",
@@ -2199,18 +1830,10 @@
         "Firidun bəy Köçərli",
         "Ramana qəsəbəsi (Azərbaycan)"
       ],
-      "status": "watch",
-      "occupancy": 39,
-      "delayRisk": "medium",
-      "capacity": 110,
-      "avgDelayMinutes": 7,
-      "crowded": false
+      "stopsRaw": "Koroğlu, 4-cü, Xəlil Rza Ulutürk, Böyükşor bulvarı, Sabunçu dairəsi, Sabunçu qəsəbəsi (Azərbaycan), Bolmart, Sabunçu Qəsəbə (Azərbaycan), Socar Ekoloji Monitorinq Departamenti, ABU Petrol, Ramana yolu, Balaxanı yolu, Rahat market, Zabrat-1 qəsəbəsi (Azərbaycan), Yeni Nəsil Tədris Mərkəzi, 15 nömrəli peşə liseyi, Zabrat qəsəbəsi (Azərbaycan), Zabrat 1 stansiyası, Bakı Neftmaş Zavodu ASC, DYP Sabunçu rayon Şöbəsi, 75 saylı orta məktəb, Seyid market, Zabrat mall, Dövlət Gömrük Komitəsinin Akademiyası, Maştağa Olimpiya idman kompleksi, Halal market, Şahin market, Oba market 1, 296 saylı orta məktəb, Azergoktel, Mini Market 1, 137 saylı orta məktəb, Firidun bəy Köçərli, Ramana qəsəbəsi (Azərbaycan)"
     },
     {
-      "id": "r_172",
-      "code": "BUS-172",
-      "name": "Bilgəh qəs → Koroğlu m/st",
-      "transportType": "bus",
+      "code": "172",
       "origin": "Bilgəh qəs",
       "destination": "Koroğlu m/st",
       "firstDeparture": "05:20",
@@ -2265,18 +1888,10 @@
         "Yaşıl Abadlıq",
         "Bilgəh kardioloji sanatoriyası"
       ],
-      "status": "watch",
-      "occupancy": 78,
-      "delayRisk": "medium",
-      "capacity": 130,
-      "avgDelayMinutes": 2,
-      "crowded": false
+      "stopsRaw": "Koroğlu, Sabunçu dairəsi, Sabunçu qəsəbəsi (Azərbaycan), Bolmart, Socar Ekoloji Monitorinq Departamenti, ABU Petrol, Ramana yolu, Balaxanı yolu, Rahat market, Zabrat-1 qəsəbəsi (Azərbaycan), Yeni Nəsil Tədris Mərkəzi, 15 nömrəli peşə liseyi, Zabrat qəsəbəsi (Azərbaycan), Zabrat 1 stansiyası, Bakı Neftmaş Zavodu ASC, DYP Sabunçu rayon Şöbəsi, Kübar market, 75 saylı orta məktəb, Seyid market, Zabrat mall, Dövlət Gömrük Komitəsinin Akademiyası, Maştağa Olimpiya idman kompleksi, Araz Supermarketi, Oba market, Kanal market, Maştağa qəsəbəsi (Azərbaycan), Express mebel, Maştağa dairəsi, Real market, Araz-1 supermarket, Maştağa parkı, Maştağa qəbiristanlığı, İnci restoranı, Qulu Əsgərov, 130 saylı məktəb, Bilgəh şossesi, Qocalar evi, Mirvari restoranı, Sema marketi, Bilgəh qəsəbəsi (Azərbaycan), 142 saylı məktəb, Uşaq bağçası, Zəhra restoranı, Qəbiristanlıq, Təcili yardım nömrəsi 14, Yaşıl Abadlıq, Bilgəh kardioloji sanatoriyası"
     },
     {
-      "id": "r_189",
-      "code": "BUS-189",
-      "name": "Nardaran qəs → Koroğlu m/st",
-      "transportType": "bus",
+      "code": "189",
       "origin": "Nardaran qəs",
       "destination": "Koroğlu m/st",
       "firstDeparture": "05:40",
@@ -2329,18 +1944,10 @@
         "Hacı Qulaməli məscidi",
         "Nardaran qalası"
       ],
-      "status": "busy",
-      "occupancy": 49,
-      "delayRisk": "high",
-      "capacity": 130,
-      "avgDelayMinutes": 11,
-      "crowded": false
+      "stopsRaw": "Koroğlu, 4-cü, Xəlil Rza Ulutürk, Bakı nəqliyyat agentliyi, Böyükşor bulvarı, Socar Neft bazası, Sabunçu dairəsi, Sabunçu qəsəbəsi (Azərbaycan), Bolmart, Socar Ekoloji Monitorinq Departamenti, ABU Petrol, Ramana yolu, Balaxanı yolu, Rahat market, Zabrat-1 qəsəbəsi (Azərbaycan), Yeni Nəsil Tədris Mərkəzi, 15 nömrəli peşə liseyi, Zabrat qəsəbəsi (Azərbaycan), Zabrat 1 stansiyası, Bakı Neftmaş Zavodu ASC, DYP Sabunçu rayon Şöbəsi, Kübar market, 75 saylı orta məktəb, Seyid market, Zabrat mall, Dövlət Gömrük Komitəsinin Akademiyası, Maştağa Olimpiya idman kompleksi, Araz Supermarketi, Oba market, Kanal market, Maştağa qəsəbəsi (Azərbaycan), Express mebel, Maştağa dairəsi, Real market, Araz-1 supermarket, 293 saylı məktəb, Məscidi Seyid Əkbər, Mini market, Dəniz marketi, Nardaran qəsəbəsi (Azərbaycan), Nardaran restoranı, Nardaran ATS-i, İmam Hüseyn meydanı, Hacı Qulaməli məscidi, Nardaran qalası"
     },
     {
-      "id": "r_205",
-      "code": "BUS-205",
-      "name": "Abşeron t/m → Nəsimi m/st",
-      "transportType": "bus",
+      "code": "205",
       "origin": "Abşeron t/m",
       "destination": "Nəsimi m/st",
       "firstDeparture": "06:15",
@@ -2398,18 +2005,10 @@
         "Akademik Zərifə Əliyeva adına Milli Oftalmologiya Mərkəzi",
         "Metro Nəsimi"
       ],
-      "status": "busy",
-      "occupancy": 90,
-      "delayRisk": "high",
-      "capacity": 130,
-      "avgDelayMinutes": 10,
-      "crowded": true
+      "stopsRaw": "Апшерон-1, Qaradağ rayon polis idarəsi, Bazarstore, Binə Mall, XDG Təlim-Tədris Mərkəzi, Bakı baş gömrük idarəsi, Yaşıl Şəhər, Grand park, Aqua park Shikhov, Velopark, Khazri Motel, Bibiheybət Məscidi, Bibiheybət buxtası, Bakı ali neft məktəbi, Kaspi təhsil mərkəzi, Yeni Salyan Yolu ev 16, 118 saylı elektrik yarımstansiyası, Su idmanı sarayı, Səbail DYP, Səbail rayon mühafizə idarəsi, 23 nömrəli poçt şöbəsi, 20-ci Sahə dairəsi, \"BNG Petrol\" yanacaqdoldurma məntəqəsi, Səbail Meydanı, Dövlət Bayrağı Meydanı, Səbail rayon dövlət yanğından mühafizə hissəsi, Riviera restoran, Niyazi, İçərişəhər metro, Axundov bağı, Həsən Seyidbəyli, Alov qüllələri, Mərkəzi klinik xəstəxanası, 20 saylı məktəb-lisey, Respublika İncəsənət gimnaziyası, 16 saylı uşaq musiqi məktəbi, Azad Azərbaycan teleradio və yayım şirkəti, 10 saylı uşaq bağçası, A.M. Şərifzadə, Yasamal bələdiyyəsi, Yasamal rayon telefon qovşağı, İnşaatçılar metrosu, Bakı biznes universiteti, 20 Yanvar metrosu, 3-cü mikrorayon (Seyid Cəfər Pişəvəri küçəsi), Memar Əcəmi dairəsi, Cavadxan küçəsi, 4-cü mikrorayon dairəsi, Akademik Zərifə Əliyeva adına Milli Oftalmologiya Mərkəzi, Metro Nəsimi"
     },
     {
-      "id": "r_211",
-      "code": "BUS-211",
-      "name": "Kobia → Abşeron t/m",
-      "transportType": "bus",
+      "code": "211",
       "origin": "Kobia",
       "destination": "Abşeron t/m",
       "firstDeparture": "05:30",
@@ -2451,18 +2050,10 @@
         "Апшерон-1",
         "Апшерон"
       ],
-      "status": "busy",
-      "occupancy": 90,
-      "delayRisk": "high",
-      "capacity": 110,
-      "avgDelayMinutes": 7,
-      "crowded": true
+      "stopsRaw": "11 saylı məktəb, Ziya Bünyadov prospekti, Ziya Bünyadov ev 65, Bakı patologiya mərkəzi, Fətəli Xan Xoyski, Əhməd Rəcəbli, 5 Saylı Xəstəxana, Caspian Shopping Center, Gənclik, Istanbul oteli, Atatürk ev 159, 102 nömrəli məktəb, Nəcəf Nərimanov, Milli Arxiv İdarəsi, Ziya Bünyadov ev 98, Alı Mustafayev, C. Səlimov küç 50, Bravo hipermarket, 20 Yanvar metrosu, Şərifzadə, İTV Radio Yayımları Şirkəti, Dadaş Bünyadzadə küçəsi, 286 saylı məktəb, Su Nəqliyyatında Polis İdarəsi, Əsəd Əhmədov, küç. 70 saylı poçt şöbəsi, Əsəd Əhmədov küçəsi 35, BDS Lukoil, Maevyali Mall, Heybat, Berlin Dükanı, Sederek Mall, Апшерон-1, Апшерон"
     },
     {
-      "id": "r_217",
-      "code": "BUS-217",
-      "name": "Məmmədli qəs → Koroğlu m/st",
-      "transportType": "bus",
+      "code": "217",
       "origin": "Məmmədli qəs",
       "destination": "Koroğlu m/st",
       "firstDeparture": "06:00",
@@ -2512,18 +2103,10 @@
         "Məhəmmədlin məscidi",
         "Məhəmmədlinski parkı"
       ],
-      "status": "busy",
-      "occupancy": 88,
-      "delayRisk": "high",
-      "capacity": 130,
-      "avgDelayMinutes": 12,
-      "crowded": true
+      "stopsRaw": "Koroğlu, 4-cü, Xəlil Rza Ulutürk, Bakı nəqliyyat agentliyi, Böyükşor bulvarı, Socar Neft bazası, Sabunçu dairəsi, Sabunçu qəsəbəsi (Azərbaycan), Bolmart, Socar Ekoloji Monitorinq Departamenti, ABU Petrol, Ramana yolu, Balaxanı yolu, Rahat market, Zabrat-1 qəsəbəsi (Azərbaycan), Yeni Nəsil Tədris Mərkəzi, 15 nömrəli peşə liseyi, Zabrat qəsəbəsi (Azərbaycan), Zabrat 1 stansiyası, Bakı Neftmaş Zavodu ASC, DYP Sabunçu rayon Şöbəsi, Kübar market, 75 saylı orta məktəb, Seyid market, Zabrat mall, Zabrat dairəsi, Məmmədli (дубликат) kənd (Azərbaycan), Zabrat yarımstansiyası, Əlillərin Reabilitasiyası Mərkəzi, Kürdəxanı yarımstansiyası, Luxoil, Məmmədli dairəsi, Məhəmmədlin gölü, Məhəmmədli qəsəbəsi (Azərbaycan), Avtomobil Qoşqar oğlu, Market Yusif, Mini market, Ekonom market, Market SS, Məhəmmədli qəsəbə məktəbi, Məhəmmədlin məscidi, Məhəmmədlinski parkı"
     },
     {
-      "id": "r_508",
-      "code": "BUS-508",
-      "name": "Saray qəs → 20 Yanvar m/st",
-      "transportType": "bus",
+      "code": "508",
       "origin": "Saray qəs",
       "destination": "20 Yanvar m/st",
       "firstDeparture": "06:00",
@@ -2560,18 +2143,10 @@
         "Kamal Axundov küçəsi",
         "Saray MTK yaşayış kompleksi"
       ],
-      "status": "stable",
-      "occupancy": 63,
-      "delayRisk": "low",
-      "capacity": 110,
-      "avgDelayMinutes": 5,
-      "crowded": false
+      "stopsRaw": "Seyid Cəfər Pişəvar küçəsi, Tbilisi prospekti, Bük, 20 Yanvar metrostansiyası, 1-ci mikrorayon, Moskva prospekti, Beynəlxalq Avtovağzal, FHN tibb mərkəzi, Rahat market, Xırdalan dairəsi, Azer City, Masazır dairəsi, Mehdi Hüseynzadə küçəsi, Abşeron gənclər şəhərciyi, 10 №-li məktəb, Mehdi Hüseyn küçəsi, Tələb üzrə, Ziya Bünyadov küçəsi, Elmar, Teymur Əliyev küçəsi, Saray polis bölməsi, Science City yaşayış kompleksi, Rəhman Abbasov küçəsi, Heydər Əliyev küçəsi, Məmməd Əmin Rəsulzadə küçəsi, Kərəm Məmmədov küçəsi, Rəhim Əzimov küçəsi, Kamal Axundov küçəsi, Saray MTK yaşayış kompleksi"
     },
     {
-      "id": "r_594",
-      "code": "BUS-594",
-      "name": "Sumqayıt → 20 Yanvar m/st",
-      "transportType": "bus",
+      "code": "594",
       "origin": "Sumqayıt",
       "destination": "20 Yanvar m/st",
       "firstDeparture": "05:50",
@@ -2587,18 +2162,10 @@
         "Sülh-1",
         "Sumqayıt Avtovağzalı"
       ],
-      "status": "busy",
-      "occupancy": 90,
-      "delayRisk": "high",
-      "capacity": 90,
-      "avgDelayMinutes": 13,
-      "crowded": true
+      "stopsRaw": "Rövşən Cəfərov, Ceyranbatan qəsəbəsi, Ceyranbatan qəsəbəsi (Azərbaycan), Sumqayıt avtomobil bazarı, Sumqayıt ş. (Sumqayıt şəhərlər, Azərbaycan), Sülh-1, Sumqayıt Avtovağzalı"
     },
     {
-      "id": "r_595",
-      "code": "BUS-595",
-      "name": "S.AVTOVAĞZAL → B.AVTOVAĞZAL",
-      "transportType": "bus",
+      "code": "595",
       "origin": "S.AVTOVAĞZAL",
       "destination": "B.AVTOVAĞZAL",
       "firstDeparture": "06:00",
@@ -2614,18 +2181,10 @@
         "Sumqayıt Bağça Şəhər yaşayış kompleksi",
         "Sumqayıt avtovağzalı"
       ],
-      "status": "watch",
-      "occupancy": 59,
-      "delayRisk": "medium",
-      "capacity": 90,
-      "avgDelayMinutes": 8,
-      "crowded": false
+      "stopsRaw": "Beynəlxalq Avtovağzal, Avtovağzal metro stansiyası – 2, Bük, Avtovağzal metrostansiyası, Ceyranbatan, Sumqayıta dönüş, Sumqayıt Bağça Şəhər yaşayış kompleksi, Sumqayıt avtovağzalı"
     },
     {
-      "id": "r_e1",
-      "code": "BUS-E1",
-      "name": "Xalqlar m/st → Abşeron t/m",
-      "transportType": "bus",
+      "code": "E1",
       "origin": "Xalqlar m/st",
       "destination": "Abşeron t/m",
       "firstDeparture": "06:00",
@@ -2660,18 +2219,10 @@
         "Qaradağ rayon polis idarəsi",
         "Abşeron ticarət mərkəzi"
       ],
-      "status": "busy",
-      "occupancy": 88,
-      "delayRisk": "high",
-      "capacity": 120,
-      "avgDelayMinutes": 7,
-      "crowded": true
+      "stopsRaw": "Xalqlar Dostluğu metro stansiyası, Qarayev prospektinin Nuriyev küçəsi ilə kəsişməsi, Q.Qarayev pr. B.Nuriyev küç. ilə kəsişmə, Qara Qarayev prospekti, Neftçilər metrosu, 145 saylı məktəb, Zabitlər parkı, Qara Qarayev metrosu, Qara Qarayev ev 25, 12 saylı orta məktəb, Metro Koroğlu (Milli Gimnastika Arenası), Bakı şəhər baş polis idarəsi, улица Александра Пушкина, Sahil metrosu, Azneft meydanı, Səbail DYP, Bakı ali neft məktəbi, Bibiheybət buxtası, Aqua park Shikhov, Grand park, Yaşıl Şəhər, Bakı baş gömrük idarəsi, XDG Təlim-Tədris Mərkəzi, Binə Mall, Bazarstore, Qaradağ rayon polis idarəsi, Abşeron ticarət mərkəzi"
     },
     {
-      "id": "r_h1",
-      "code": "BUS-H1",
-      "name": "Hava Limanı → 28 May m/st",
-      "transportType": "bus",
+      "code": "H1",
       "origin": "Hava Limanı",
       "destination": "28 May m/st",
       "firstDeparture": "06:00",
@@ -2684,18 +2235,10 @@
         "Bakı ekspo mərkəzi",
         "Terminal 1"
       ],
-      "status": "stable",
-      "occupancy": 62,
-      "delayRisk": "low",
-      "capacity": 120,
-      "avgDelayMinutes": 5,
-      "crowded": false
+      "stopsRaw": "28 May NMM D, Metro Koroğlu (Milli Gimnastika Arenası), Komsomol dairəsi, Bakı ekspo mərkəzi, Terminal 1"
     },
     {
-      "id": "r_m8",
-      "code": "BUS-M8",
-      "name": "Maştağa qəs → Gənclik m/st",
-      "transportType": "bus",
+      "code": "M8",
       "origin": "Maştağa qəs",
       "destination": "Gənclik m/st",
       "firstDeparture": "05:40",
@@ -2751,183 +2294,7 @@
         "Nərimanov Rayon Məhkəməsi",
         "Metro Gənclik"
       ],
-      "status": "watch",
-      "occupancy": 67,
-      "delayRisk": "medium",
-      "capacity": 120,
-      "avgDelayMinutes": 7,
-      "crowded": false
-    }
-  ],
-  "predictions": [
-    {
-      "id": "p_r_121e",
-      "routeId": "r_121e",
-      "passengerFlow": 864,
-      "occupancyForecast": 99,
-      "delayRisk": "high",
-      "generatedAt": "2026-04-25T08:00:00Z"
-    },
-    {
-      "id": "p_r_7a",
-      "routeId": "r_7a",
-      "passengerFlow": 1209,
-      "occupancyForecast": 96,
-      "delayRisk": "high",
-      "generatedAt": "2026-04-25T08:00:00Z"
-    },
-    {
-      "id": "p_r_120",
-      "routeId": "r_120",
-      "passengerFlow": 837,
-      "occupancyForecast": 96,
-      "delayRisk": "high",
-      "generatedAt": "2026-04-25T08:00:00Z"
-    },
-    {
-      "id": "p_r_21",
-      "routeId": "r_21",
-      "passengerFlow": 1196,
-      "occupancyForecast": 95,
-      "delayRisk": "high",
-      "generatedAt": "2026-04-25T08:00:00Z"
-    },
-    {
-      "id": "p_r_3",
-      "routeId": "r_3",
-      "passengerFlow": 1170,
-      "occupancyForecast": 93,
-      "delayRisk": "high",
-      "generatedAt": "2026-04-25T08:00:00Z"
-    },
-    {
-      "id": "p_r_205",
-      "routeId": "r_205",
-      "passengerFlow": 1170,
-      "occupancyForecast": 93,
-      "delayRisk": "high",
-      "generatedAt": "2026-04-25T08:00:00Z"
-    }
-  ],
-  "recommendations": [
-    {
-      "id": "rec1",
-      "title": "Shift to metro",
-      "description": "Use metro on east-west corridor to avoid bus crowding.",
-      "confidence": 0.91,
-      "audience": "user"
-    },
-    {
-      "id": "rec2",
-      "title": "Deploy reserve buses",
-      "description": "Add 3 reserve buses to BUS-88A at peak time.",
-      "confidence": 0.88,
-      "audience": "admin"
-    }
-  ],
-  "alerts": [
-    {
-      "id": "a_r_3",
-      "title": "Crowding spike on BUS-3",
-      "severity": "warning",
-      "description": "BUS-3 (BADAMDAR qəs. → DƏRNƏGÜL m/st) — occupancy 90%, avg delay 11 min.",
-      "createdAt": "2026-04-25T07:30:00Z"
-    },
-    {
-      "id": "a_r_5",
-      "title": "Crowding spike on BUS-5",
-      "severity": "warning",
-      "description": "BUS-5 (Nərimanov m/st → 20-ci Sahə) — occupancy 89%, avg delay 7 min.",
-      "createdAt": "2026-04-25T07:30:00Z"
-    },
-    {
-      "id": "a_r_7a",
-      "title": "Crowding spike on BUS-7A",
-      "severity": "critical",
-      "description": "BUS-7A (B.AVTOVAĞZAL → Gəncə Pr) — occupancy 93%, avg delay 13 min.",
-      "createdAt": "2026-04-25T07:30:00Z"
-    }
-  ],
-  "team": [],
-  "institutions": [
-    {
-      "id": "i1",
-      "name": "AZAL",
-      "category": "aviation",
-      "description": "National carrier with 50+ routes."
-    },
-    {
-      "id": "i2",
-      "name": "BakuBus",
-      "category": "bus",
-      "description": "Modern urban bus operator."
-    },
-    {
-      "id": "i3",
-      "name": "Baku Metro",
-      "category": "metro",
-      "description": "Urban rail backbone since 1967."
-    },
-    {
-      "id": "i4",
-      "name": "Baku Taxi Service",
-      "category": "taxi",
-      "description": "State-backed taxi network."
-    }
-  ],
-  "analytics": {
-    "overview": {
-      "managedEntities": 52,
-      "employees": 50000,
-      "foundedAt": "2024-11-07"
-    },
-    "densityTrend": [
-      {
-        "label": "Mon",
-        "density": 61,
-        "delay": 4
-      },
-      {
-        "label": "Tue",
-        "density": 67,
-        "delay": 5
-      },
-      {
-        "label": "Wed",
-        "density": 73,
-        "delay": 7
-      },
-      {
-        "label": "Thu",
-        "density": 71,
-        "delay": 6
-      },
-      {
-        "label": "Fri",
-        "density": 79,
-        "delay": 9
-      }
-    ]
-  },
-  "siteSettings": {
-    "maintenanceMode": false,
-    "registrationOpen": true,
-    "aiDispatchEnabled": true,
-    "announcements": [
-      "Smart transit mode is active.",
-      "Staff AI dispatch board monitors peak-hour crowding."
-    ]
-  },
-  "crowdReports": [
-    {
-      "id": "cr_1777136794489_246",
-      "routeId": "r_1",
-      "stop": "gənclik",
-      "departureTime": "08:30",
-      "hour": 8,
-      "crowded": true,
-      "userId": "u_1776798164492",
-      "createdAt": "2026-04-25T17:06:34.489Z"
+      "stopsRaw": "Fərid market, Maştağa qəsəbəsi (Azərbaycan), Bakı kafesi, 128 saylı orta məktəb, Görüş Şadlıq Sarayı (son M8), Maştağa stansiyası, 255 saylı məktəb, Maştağa parkı, Savalan Market, Cümə Məscidi Maştağa, Rahat-1 market, Araz-1 supermarket, Real market, Maştağa dairəsi, Express mebel, Kanal market, Oba market, Araz Supermarketi, Maştağa Olimpiya idman kompleksi, Dövlət Gömrük Komitəsinin Akademiyası, Zabrat mall, Zabrat qəsəbəsi (Azərbaycan), Seyid market, 75 saylı orta məktəb, DYP Sabunçu rayon Şöbəsi, Bakı Neftmaş Zavodu ASC, Zabrat 1 stansiyası, Yeni Nəsil Tədris Mərkəzi, Rahat market, Zabrat-1 qəsəbəsi (Azərbaycan), Ramana yolu, ABU Petrol, Socar Ekoloji Monitorinq Departamenti, Bolmart, Sabunçu dairəsi, Böyükşor bulvarı, Heydər Əliyev prospekti 106a, Nəqliyyatı intellektual idarəetmə mərkəzi, Socar neft şirkəti, Mərkəzi incəsənət məktəbi, Ağa Nemətulla ev 84, m/st Nəriman Nərimanov, 39 saylı orta məktəb, Bakı İdarəetmə və texnologiya kolleci, Şəhriyar ünvanı, Əhmədbəy Ağaoğlu ev 29, Nərimanov Rayon Məhkəməsi, Metro Gənclik"
     }
   ]
 }
