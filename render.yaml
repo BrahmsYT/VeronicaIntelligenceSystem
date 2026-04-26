@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: azcon-smart-transit-backend
+    runtime: node
+    rootDir: backend
+    plan: free
+    autoDeploy: true
+    buildCommand: npm install
+    startCommand: npx tsx src/server.ts
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: AI_ENABLED
+        value: "false"
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_BASE_URL
+        value: https://openrouter.ai/api/v1
+      - key: OPENROUTER_MODEL
+        value: openai/gpt-4o-mini
+      - key: OPENROUTER_TIMEOUT_MS
+        value: "15000"
+      - key: OSM_USER_AGENT
+        value: azcon-smart-transit/1.0
+      - key: OSM_CONTACT_EMAIL
+        sync: false
+
+  - type: web
+    name: azcon-smart-transit-frontend
+    runtime: node
+    rootDir: frontend
+    plan: free
+    autoDeploy: true
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_BASE_URL
+        sync: false
