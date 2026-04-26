@@ -96,6 +96,11 @@ const crowdReportSchema = z.object({
   crowded: z.boolean()
 });
 
+const routeMapQuerySchema = z.object({
+  from: z.string().min(2),
+  to: z.string().min(2)
+});
+
 const staffPlanSchema = z.object({
   routeId: z.string().min(1),
   additionalDemandPercent: z.number().min(0).max(40).default(0),
@@ -110,6 +115,161 @@ const defaultSiteSettings = {
 };
 
 const getSiteSettings = (db: any) => ({ ...defaultSiteSettings, ...(db.siteSettings ?? {}) });
+
+type GeoPoint = {
+  label: string;
+  lng: number;
+  lat: number;
+};
+
+const geocodeCache = new Map<string, GeoPoint>();
+
+const BAKU_CENTER = { lng: 49.8671, lat: 40.4093 };
+const BAKU_BBOX = {
+  minLng: 49.74,
+  minLat: 40.30,
+  maxLng: 50.33,
+  maxLat: 40.57
+};
+
+const isInsideBakuBounds = (lng: number, lat: number) =>
+  lng >= BAKU_BBOX.minLng && lng <= BAKU_BBOX.maxLng && lat >= BAKU_BBOX.minLat && lat <= BAKU_BBOX.maxLat;
+
+const geocodeQueryCandidates = (query: string) => {
+  const raw = String(query || '').trim();
+  const cleaned = raw
+    .replace(/\b(m\/st|mst|metro stansiyasi|metro station|metro)\b/gi, ' ')
+    .replace(/\b(q\.?s\.?|qəs\.?|qes\.?|qəsəbəsi|qesebesi)\b/gi, ' ')
+    .replace(/\b(t\/?m|tm|trade center|shopping mall)\b/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const canonical = canonicalPlace(raw).replace(/\s+/g, ' ').trim();
+  return [raw, cleaned, canonical]
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .filter((item, idx, arr) => arr.findIndex((x) => x.toLowerCase() === item.toLowerCase()) === idx);
+};
+
+const geocodeViaPhoton = async (candidate: string): Promise<GeoPoint | null> => {
+  const searchText = `${candidate}, Baku, Azerbaijan`;
+  const photonUrl =
+    `https://photon.komoot.io/api/?q=${encodeURIComponent(searchText)}` +
+    `&limit=8&lang=en&bbox=${BAKU_BBOX.minLng},${BAKU_BBOX.minLat},${BAKU_BBOX.maxLng},${BAKU_BBOX.maxLat}`;
+  const response = await fetch(photonUrl, {
+    headers: {
+      'user-agent': env.osmUserAgent
+    }
+  });
+  if (!response.ok) return null;
+
+  const payload: any = await response.json();
+  const features = Array.isArray(payload?.features) ? payload.features : [];
+  const feature = features.find((item: any) => {
+    const coords = Array.isArray(item?.geometry?.coordinates) ? item.geometry.coordinates : null;
+    if (!coords || coords.length < 2) return false;
+    const lng = Number(coords[0]);
+    const lat = Number(coords[1]);
+    if (Number.isNaN(lng) || Number.isNaN(lat)) return false;
+    return isInsideBakuBounds(lng, lat);
+  });
+  if (!feature) return null;
+
+  const coords = Array.isArray(feature?.geometry?.coordinates) ? feature.geometry.coordinates : [];
+  const lng = Number(coords[0]);
+  const lat = Number(coords[1]);
+  if (Number.isNaN(lng) || Number.isNaN(lat)) return null;
+
+  const props = feature?.properties || {};
+  const labelParts = [props?.name, props?.city, props?.country].filter(Boolean);
+  return {
+    label: String(labelParts.join(', ') || candidate),
+    lng,
+    lat
+  };
+};
+
+const geocodeStop = async (query: string): Promise<GeoPoint | null> => {
+  const emailParam = env.osmContactEmail ? `&email=${encodeURIComponent(env.osmContactEmail)}` : '';
+  const candidates = geocodeQueryCandidates(query);
+
+  for (const candidate of candidates) {
+    const cacheKey = candidate.toLowerCase();
+    const cached = geocodeCache.get(cacheKey);
+    if (cached) return cached;
+
+    const searchText = `${candidate}, Baku, Azerbaijan`;
+    const geocodeUrl =
+      `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&countrycodes=az` +
+      `&viewbox=${BAKU_BBOX.minLng},${BAKU_BBOX.maxLat},${BAKU_BBOX.maxLng},${BAKU_BBOX.minLat}` +
+      `&bounded=1&q=${encodeURIComponent(searchText)}${emailParam}`;
+    const response = await fetch(geocodeUrl, {
+      headers: {
+        'accept-language': 'en',
+        'user-agent': env.osmUserAgent
+      }
+    });
+    if (response.status === 429) {
+      const photonResult = await geocodeViaPhoton(candidate);
+      if (photonResult) {
+        geocodeCache.set(cacheKey, photonResult);
+        return photonResult;
+      }
+      continue;
+    }
+    if (!response.ok) throw new Error(`Map geocoding failed (${response.status})`);
+
+    const payload: any = await response.json();
+    const matches = Array.isArray(payload) ? payload : [];
+    const feature = matches.find((item: any) => {
+      const lng = Number(item?.lon);
+      const lat = Number(item?.lat);
+      if (Number.isNaN(lng) || Number.isNaN(lat)) return false;
+      return isInsideBakuBounds(lng, lat);
+    });
+    if (!feature) continue;
+
+    const lng = Number(feature?.lon);
+    const lat = Number(feature?.lat);
+    const result = {
+      label: String(feature?.display_name || candidate),
+      lng,
+      lat
+    };
+    geocodeCache.set(cacheKey, result);
+    return result;
+  }
+
+  return null;
+};
+
+const getDirectionsBetween = async (from: GeoPoint, to: GeoPoint) => {
+  const coordinates = `${from.lng},${from.lat};${to.lng},${to.lat}`;
+  const directionsUrl = `https://router.project-osrm.org/route/v1/driving/${coordinates}?overview=full&geometries=geojson&alternatives=false&steps=false`;
+  const response = await fetch(directionsUrl);
+  if (!response.ok) throw new Error('Map directions failed');
+
+  const payload: any = await response.json();
+  const route = Array.isArray(payload?.routes) ? payload.routes[0] : null;
+  if (!route) return null;
+
+  const geometry = Array.isArray(route?.geometry?.coordinates) ? route.geometry.coordinates : [];
+  return {
+    distanceMeters: Number(route.distance || 0),
+    durationSeconds: Number(route.duration || 0),
+    geometry: geometry.length ? geometry : [[from.lng, from.lat], [to.lng, to.lat]]
+  };
+};
+
+const buildStaticMapUrl = (from: GeoPoint, to: GeoPoint, geometry: number[][]) => {
+  const sampled = geometry.length > 70
+    ? geometry.filter((_, idx) => idx % Math.ceil(geometry.length / 70) === 0 || idx === geometry.length - 1)
+    : geometry;
+  const pathPoints = sampled.map(([lng, lat]) => `${lat},${lng}`).join('|');
+  const markerStart = `${from.lat},${from.lng},lightgreen1`;
+  const markerEnd = `${to.lat},${to.lng},orange1`;
+  const path = `color:0x22d3eeff|weight:4|${pathPoints}`;
+  return `https://staticmap.openstreetmap.de/staticmap.php?size=1200x700&markers=${encodeURIComponent(markerStart)}|${encodeURIComponent(markerEnd)}&path=${encodeURIComponent(path)}`;
+};
 
 const parseHour = (value: string) => Number(value.split(':')[0]);
 
@@ -188,6 +348,16 @@ const canonicalPlace = (value: string) => {
 
 const placeTokens = (value: string) => canonicalPlace(value).split(' ').filter(Boolean);
 
+const isAmbiguousPlaceQuery = (value: string) => {
+  const tokens = placeTokens(value);
+  if (!tokens.length) return true;
+  if (tokens.length > 1) return false;
+  const token = tokens[0];
+  const hasDigit = /\d/.test(token);
+  if (hasDigit) return true;
+  return token.length <= 3;
+};
+
 const placeMatchScore = (candidate: string, query: string) => {
   const cRaw = normalizePlace(candidate);
   const qRaw = normalizePlace(query);
@@ -242,6 +412,13 @@ const findBestStopName = (route: any, place: string) => {
 };
 
 const resolveGlobalStopName = (routes: any[], place: string) => {
+  if (isAmbiguousPlaceQuery(place)) {
+    return {
+      stop: place,
+      score: 0
+    };
+  }
+
   let bestStop = place;
   let bestScore = 0;
 
@@ -527,6 +704,37 @@ app.post('/api/ai/recommendation', auth, async (req, res) => {
   try { res.json(await getSmartRecommendation(req.body ?? {})); } catch (e: any) { res.status(400).json({ message: e.message }); }
 });
 
+app.get('/api/maps/route-preview', auth, async (req, res) => {
+  try {
+    const query = routeMapQuerySchema.parse(req.query);
+    const fromPoint = await geocodeStop(query.from);
+    const toPoint = await geocodeStop(query.to);
+    if (!fromPoint || !toPoint) {
+      return res.status(404).json({ message: 'Could not resolve Baku coordinates for one or both stops.' });
+    }
+
+    if (!isInsideBakuBounds(fromPoint.lng, fromPoint.lat) || !isInsideBakuBounds(toPoint.lng, toPoint.lat)) {
+      return res.status(404).json({ message: 'Stops must be inside Baku city bounds.' });
+    }
+
+    const directions = await getDirectionsBetween(fromPoint, toPoint);
+    if (!directions) {
+      return res.status(404).json({ message: 'No route path found on map provider.' });
+    }
+
+    res.json({
+      from: fromPoint,
+      to: toPoint,
+      distanceMeters: directions.distanceMeters,
+      durationSeconds: directions.durationSeconds,
+      geometry: directions.geometry,
+      staticMapUrl: buildStaticMapUrl(fromPoint, toPoint, directions.geometry)
+    });
+  } catch (e: any) {
+    res.status(400).json({ message: e.message });
+  }
+});
+
 app.get('/api/staff/ai-overview', staff, (_req, res) => {
   const db = readDb();
   const routes = db.routes.map((route: any) => ({
@@ -646,12 +854,17 @@ app.post('/api/user/trip-forecast', auth, async (req, res) => {
 
     const directCandidates = routes
       .map((route: any) => {
-        const fromIdx = findStopIndex(route, origin);
-        const toIdx = findStopIndex(route, destination);
-        const valid = fromIdx !== -1 && toIdx !== -1 && fromIdx < toIdx;
-        if (!valid) return null;
+        const fromStop = findBestStopName(route, origin);
+        const toStop = findBestStopName(route, destination);
+        if (!fromStop || !toStop || isPlaceMatch(fromStop, toStop)) return null;
 
-        const legForecast = forecastForRoute(db, route, origin, body.departureTime, body.date);
+        const fromIdx = findStopIndex(route, fromStop);
+        const toIdx = findStopIndex(route, toStop);
+        if (fromIdx === -1 || toIdx === -1 || fromIdx === toIdx) return null;
+
+        const legForecast = forecastForRoute(db, route, fromStop, body.departureTime, body.date);
+        const fastScore = legForecast.estimatedMinutesToEase;
+        const comfortScore = legForecast.predictedOccupancy;
         return {
           id: 'direct',
           title: '1 bus, direct',
@@ -659,16 +872,18 @@ app.post('/api/user/trip-forecast', auth, async (req, res) => {
           totalPredictedOccupancy: legForecast.predictedOccupancy,
           totalEstimatedMinutesToEase: legForecast.estimatedMinutesToEase,
           crowdLevel: legForecast.crowdLevel,
-          score: legForecast.predictedOccupancy + legForecast.estimatedMinutesToEase * 0.35,
-          summary: `Take ${route.code} directly. No transfer needed.`,
+          fastScore,
+          comfortScore,
+          score: comfortScore * 0.6 + fastScore * 0.4,
+          summary: `Take ${route.code} directly from ${toEnglishLikeText(fromStop)} to ${toEnglishLikeText(toStop)}.`,
           community: legForecast.crowdMemory,
           legs: [
             {
               routeId: route.id,
               routeCode: route.code,
               routeName: route.name,
-              from: origin,
-              to: destination,
+              from: fromStop,
+              to: toStop,
               predictedOccupancy: legForecast.predictedOccupancy,
               crowdLevel: legForecast.crowdLevel,
               estimatedMinutesToEase: legForecast.estimatedMinutesToEase
@@ -680,48 +895,52 @@ app.post('/api/user/trip-forecast', auth, async (req, res) => {
 
     const transferCandidates: any[] = [];
     for (const first of routes) {
-      const firstFromIdx = findStopIndex(first, origin);
-      if (firstFromIdx === -1) continue;
+      const firstFromStop = findBestStopName(first, origin);
+      if (!firstFromStop) continue;
 
       const firstStops = routeStops(first);
       for (const second of routes) {
         if (first.id === second.id) continue;
-        const secondToIdx = findStopIndex(second, destination);
-        if (secondToIdx === -1) continue;
+        const secondToStop = findBestStopName(second, destination);
+        if (!secondToStop) continue;
 
         const secondStops = routeStops(second);
-        for (const interchange of firstStops) {
-          if (!interchange || isPlaceMatch(interchange, origin) || isPlaceMatch(interchange, destination)) continue;
+        const legA = forecastForRoute(db, first, firstFromStop, body.departureTime, body.date);
+        let bestForPair: any = null;
 
-          const firstInterchangeIdx = findStopIndex(first, interchange);
-          const secondInterchangeIdx = findStopIndex(second, interchange);
-          if (firstInterchangeIdx === -1 || secondInterchangeIdx === -1) continue;
-          if (firstFromIdx >= firstInterchangeIdx || secondInterchangeIdx >= secondToIdx) continue;
+        for (const firstInterchange of firstStops) {
+          if (!firstInterchange || isPlaceMatch(firstInterchange, firstFromStop) || isPlaceMatch(firstInterchange, secondToStop)) continue;
 
-          const legA = forecastForRoute(db, first, origin, body.departureTime, body.date);
-          const legB = forecastForRoute(db, second, interchange, body.departureTime, body.date);
+          const secondInterchange = secondStops.find((stop: string) => isPlaceMatch(stop, firstInterchange));
+          if (!secondInterchange || isPlaceMatch(secondInterchange, secondToStop)) continue;
+
+          const legB = forecastForRoute(db, second, secondInterchange, body.departureTime, body.date);
           const totalPredictedOccupancy = Math.round((legA.predictedOccupancy + legB.predictedOccupancy) / 2);
-          const totalEstimatedMinutesToEase = legA.estimatedMinutesToEase + legB.estimatedMinutesToEase + 6;
+          const transferPenaltyMinutes = 6;
+          const totalEstimatedMinutesToEase = legA.estimatedMinutesToEase + legB.estimatedMinutesToEase + transferPenaltyMinutes;
           const crowdLevel = levelFromOccupancy(totalPredictedOccupancy);
-
-          transferCandidates.push({
+          const fastScore = totalEstimatedMinutesToEase;
+          const comfortScore = totalPredictedOccupancy;
+          const candidate = {
             id: 'transfer',
-            title: '2 buses, lower crowding potential',
+            title: '2 buses, 1 interchange',
             transferCount: 1,
-            interchange,
+            interchange: firstInterchange,
             totalPredictedOccupancy,
             totalEstimatedMinutesToEase,
             crowdLevel,
-            score: totalPredictedOccupancy + 8 + totalEstimatedMinutesToEase * 0.35,
-            summary: `Take ${first.code} to ${toEnglishLikeText(interchange)} stop, then transfer to ${second.code}.`,
+            fastScore,
+            comfortScore,
+            score: comfortScore * 0.6 + fastScore * 0.4 + 2,
+            summary: `Take ${first.code} from ${toEnglishLikeText(firstFromStop)} to ${toEnglishLikeText(firstInterchange)}, then transfer to ${second.code} and continue to ${toEnglishLikeText(secondToStop)}.`,
             community: legA.crowdMemory,
             legs: [
               {
                 routeId: first.id,
                 routeCode: first.code,
                 routeName: first.name,
-                from: origin,
-                to: interchange,
+                from: firstFromStop,
+                to: firstInterchange,
                 predictedOccupancy: legA.predictedOccupancy,
                 crowdLevel: legA.crowdLevel,
                 estimatedMinutesToEase: legA.estimatedMinutesToEase
@@ -730,15 +949,21 @@ app.post('/api/user/trip-forecast', auth, async (req, res) => {
                 routeId: second.id,
                 routeCode: second.code,
                 routeName: second.name,
-                from: interchange,
-                to: destination,
+                from: secondInterchange,
+                to: secondToStop,
                 predictedOccupancy: legB.predictedOccupancy,
                 crowdLevel: legB.crowdLevel,
                 estimatedMinutesToEase: legB.estimatedMinutesToEase
               }
             ]
-          });
+          };
+
+          if (!bestForPair || candidate.score < bestForPair.score) {
+            bestForPair = candidate;
+          }
         }
+
+        if (bestForPair) transferCandidates.push(bestForPair);
       }
     }
 
@@ -752,7 +977,10 @@ app.post('/api/user/trip-forecast', auth, async (req, res) => {
       });
     }
 
-    const recommended = alternatives.sort((a, b) => a.score - b.score)[0];
+    const allCandidates = [...directCandidates, ...transferCandidates];
+    const fastestOption = allCandidates.sort((a, b) => a.fastScore - b.fastScore)[0] || null;
+    const leastCrowdedOption = allCandidates.sort((a, b) => a.comfortScore - b.comfortScore)[0] || null;
+    const recommended = bestDirect || bestTransfer;
     const displayOrigin = toEnglishLikeText(originInput);
     const displayDestination = toEnglishLikeText(destinationInput);
     const directVsTransferNote =
@@ -761,8 +989,14 @@ app.post('/api/user/trip-forecast', auth, async (req, res) => {
           ? `2 buses can reduce crowding by about ${bestDirect.totalPredictedOccupancy - bestTransfer.totalPredictedOccupancy}% but requires 1 transfer.`
           : `1 bus is more convenient and crowding difference is small.`
         : bestDirect
-          ? 'A direct route was found and selected as best option.'
+          ? 'A direct route was found and prioritized as the recommended option.'
           : 'A transfer route was found as the only viable option.';
+    const optimizationNote = [
+      fastestOption ? `Fastest option: ${fastestOption.summary}` : '',
+      leastCrowdedOption ? `Least-crowded option: ${leastCrowdedOption.summary}` : ''
+    ]
+      .filter(Boolean)
+      .join(' ');
     const weekday = isWeekdayDate(body.date);
     const hour = parseHour(body.departureTime);
     const contextNote = buildContextNote(weekday, hour, origin, getStopContextBoost(origin, hour, weekday));
@@ -773,7 +1007,7 @@ app.post('/api/user/trip-forecast', auth, async (req, res) => {
       date: body.date,
       recommendedSummary: recommended.summary,
       contextNote,
-      directVsTransferNote,
+      directVsTransferNote: `${directVsTransferNote} ${optimizationNote}`.trim(),
       alternatives: alternatives.map((item) => ({
         id: item.id,
         transferCount: item.transferCount,

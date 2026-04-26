@@ -90,5 +90,14 @@ export const apiClient = {
   submitCrowdReport: (token: string, payload: { routeId: string; stop: string; departureTime: string; crowded: boolean }) =>
     request<CrowdReportResult>('/user/crowd-report', { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify(payload) }),
   getCrowdFeed: (token: string, payload: { routeId: string; stop: string; limit?: number }) =>
-    request<{ reports: CrowdFeedReport[] }>(`/user/crowd-feed?routeId=${encodeURIComponent(payload.routeId)}&stop=${encodeURIComponent(payload.stop)}&limit=${payload.limit ?? 8}`, { headers: { Authorization: `Bearer ${token}` } })
+    request<{ reports: CrowdFeedReport[] }>(`/user/crowd-feed?routeId=${encodeURIComponent(payload.routeId)}&stop=${encodeURIComponent(payload.stop)}&limit=${payload.limit ?? 8}`, { headers: { Authorization: `Bearer ${token}` } }),
+  getRoutePreview: (token: string, payload: { from: string; to: string }) =>
+    request<{
+      from: { label: string; lng: number; lat: number };
+      to: { label: string; lng: number; lat: number };
+      distanceMeters: number;
+      durationSeconds: number;
+      staticMapUrl: string;
+      geometry: number[][];
+    }>(`/maps/route-preview?from=${encodeURIComponent(payload.from)}&to=${encodeURIComponent(payload.to)}`, { headers: { Authorization: `Bearer ${token}` } })
 };

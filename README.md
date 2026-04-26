@@ -41,6 +41,22 @@ OPENROUTER_MODEL=openai/gpt-4o-mini
 
 When `AI_ENABLED=false`, the backend returns safe mock AI responses.
 
+## Real map preview (Mapbox)
+
+To enable real route maps in Trip Planner, add these values to `backend/.env`:
+
+```env
+MAPBOX_ACCESS_TOKEN=your_mapbox_token
+MAPBOX_STYLE=mapbox/dark-v11
+```
+
+The frontend calls backend proxy endpoint `GET /api/maps/route-preview`.
+Backend performs Mapbox geocoding + directions and returns:
+
+- route distance and duration
+- route geometry
+- static map image URL
+
 ## Database
 
 Main MVP data file:

@@ -1,78 +1,48 @@
 'use client';
 
-function hashToUnit(value: string) {
-  let hash = 0;
-  for (let i = 0; i < value.length; i += 1) {
-    hash = (hash << 5) - hash + value.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash % 1000) / 1000;
-}
-
-function pointFromLabel(label: string, salt: string) {
-  const x = 12 + hashToUnit(`${salt}:${label}:x`) * 76;
-  const y = 12 + hashToUnit(`${salt}:${label}:y`) * 76;
-  return { x, y };
-}
-
 export function RouteMapPreview({
   from,
   to,
-  routeName,
-  routeId
+  routeName
 }: {
   from: string;
   to: string;
   routeName: string;
-  routeId: string;
 }) {
   const safeFrom = from.trim() || 'Current location';
   const safeTo = to.trim() || 'Destination';
-
-  const start = pointFromLabel(safeFrom, routeId || routeName || 'route');
-  const end = pointFromLabel(safeTo, routeName || routeId || 'route');
-  const control = {
-    x: (start.x + end.x) / 2 + (start.y > end.y ? -9 : 9),
-    y: (start.y + end.y) / 2 - (start.x > end.x ? 8 : -8)
-  };
+  const combinedQuery = encodeURIComponent(`${safeFrom} ${safeTo} Baku`);
+  const fromQuery = encodeURIComponent(`${safeFrom} Baku`);
+  const toQuery = encodeURIComponent(`${safeTo} Baku`);
+  const routePlannerFrom = encodeURIComponent(`${safeFrom}, Baku`);
+  const routePlannerTo = encodeURIComponent(`${safeTo}, Baku`);
+  const routePlannerLink = `https://2gis.az/baku/routeSearch/rsType/bus/from/${routePlannerFrom}/to/${routePlannerTo}`;
+  const directionsHomeLink = 'https://2gis.az/baku/directions';
+  const routeLink = `https://2gis.az/baku/search/${combinedQuery}`;
+  const fromLink = `https://2gis.az/baku/search/${fromQuery}`;
+  const toLink = `https://2gis.az/baku/search/${toQuery}`;
 
   return (
     <div className='rounded-2xl p-4' style={{ border: '1px solid var(--border)', background: 'var(--panel)' }}>
-      <p className='text-xs uppercase tracking-[0.2em] soft-text'>Route map preview</p>
-      <p className='mt-2 text-sm'>Sən <span className='font-semibold text-white'>{safeFrom}</span> nöqtəsindən <span className='font-semibold text-white'>{safeTo}</span> istiqamətinə gedirsən.</p>
+      <p className='text-xs uppercase tracking-[0.2em] soft-text'>2GIS route links</p>
+      <p className='mt-2 text-sm'>2GIS marşrut ekranı üçün <span className='font-semibold text-white'>Hardan: {safeFrom}</span> və <span className='font-semibold text-white'>Haraya: {safeTo}</span> ilə link hazırlanır.</p>
 
-      <div className='mt-3 overflow-hidden rounded-xl' style={{ border: '1px solid var(--border)', background: 'linear-gradient(180deg,#0b1324,#111827)' }}>
-        <svg viewBox='0 0 100 100' className='h-48 w-full'>
-          <defs>
-            <pattern id='map-grid' width='10' height='10' patternUnits='userSpaceOnUse'>
-              <path d='M 10 0 L 0 0 0 10' fill='none' stroke='rgba(148,163,184,0.18)' strokeWidth='0.4' />
-            </pattern>
-            <linearGradient id='route-line' x1='0' y1='0' x2='1' y2='1'>
-              <stop offset='0%' stopColor='#38bdf8' />
-              <stop offset='100%' stopColor='#22d3ee' />
-            </linearGradient>
-            <marker id='route-arrow' markerWidth='8' markerHeight='8' refX='4' refY='4' orient='auto'>
-              <path d='M 0 0 L 8 4 L 0 8 z' fill='#67e8f9' />
-            </marker>
-          </defs>
-
-          <rect width='100' height='100' fill='url(#map-grid)' />
-
-          <path
-            d={`M ${start.x} ${start.y} Q ${control.x} ${control.y} ${end.x} ${end.y}`}
-            fill='none'
-            stroke='url(#route-line)'
-            strokeWidth='2.3'
-            strokeLinecap='round'
-            markerEnd='url(#route-arrow)'
-          />
-
-          <circle cx={start.x} cy={start.y} r='3.3' fill='#22c55e' />
-          <circle cx={end.x} cy={end.y} r='3.3' fill='#f97316' />
-
-          <text x={start.x + 2.8} y={start.y - 3.2} fontSize='3.2' fill='#86efac'>Start</text>
-          <text x={end.x + 2.8} y={end.y - 3.2} fontSize='3.2' fill='#fdba74'>Destination</text>
-        </svg>
+      <div className='mt-4 flex flex-wrap gap-2'>
+        <a href={routePlannerLink} target='_blank' rel='noreferrer' className='rounded-lg border border-[color:var(--border)] bg-[var(--surface)] px-3 py-2 text-sm font-medium text-white hover:bg-[var(--surface-2)]'>
+          2GIS-də A→B-ni doldur və aç
+        </a>
+        <a href={directionsHomeLink} target='_blank' rel='noreferrer' className='rounded-lg border border-[color:var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[color:var(--text-soft)] hover:bg-[var(--surface-2)] hover:text-white'>
+          Əgər dolmazsa: directions aç
+        </a>
+        <a href={routeLink} target='_blank' rel='noreferrer' className='rounded-lg border border-[color:var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[color:var(--text-soft)] hover:bg-[var(--surface-2)] hover:text-white'>
+          Əgər açılmazsa: ümumi axtarış
+        </a>
+        <a href={fromLink} target='_blank' rel='noreferrer' className='rounded-lg border border-[color:var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[color:var(--text-soft)] hover:bg-[var(--surface-2)] hover:text-white'>
+          Minəcəyin yeri aç
+        </a>
+        <a href={toLink} target='_blank' rel='noreferrer' className='rounded-lg border border-[color:var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[color:var(--text-soft)] hover:bg-[var(--surface-2)] hover:text-white'>
+          Düşəcəyin yeri aç
+        </a>
       </div>
 
       <p className='mt-3 text-xs soft-text'>Route: {routeName}</p>

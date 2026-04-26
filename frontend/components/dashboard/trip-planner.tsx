@@ -15,14 +15,29 @@ export function TripPlanner({ routes }: { routes: RouteItem[] }) {
   const [mode, setMode] = useState<'route' | 'journey'>('journey');
   const [routeId, setRouteId] = useState(routes[0]?.id ?? '');
   const [stop, setStop] = useState(routes[0]?.origin ?? 'Central stop');
+  const [dropoffStop, setDropoffStop] = useState(routes[0]?.destination ?? '');
   const [origin, setOrigin] = useState(routes[0]?.origin ?? '28 MAY m/st');
   const [destination, setDestination] = useState(routes[0]?.destination ?? 'NƏFTÇİLƏR m/st');
+  const [activeSearchField, setActiveSearchField] = useState<'origin' | 'destination' | null>(null);
   const [forecast, setForecast] = useState<TripForecast | null>(null);
   const [crowdFeed, setCrowdFeed] = useState<CrowdFeedReport[]>([]);
   const [loading, setLoading] = useState(false);
   const [feedbackLoading, setFeedbackLoading] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const [error, setError] = useState('');
+
+  const searchKey = (value: string) =>
+    String(value || '')
+      .toLowerCase()
+      .replace(/[əƏ]/g, 'e')
+      .replace(/[ıİ]/g, 'i')
+      .replace(/[öÖ]/g, 'o')
+      .replace(/[üÜ]/g, 'u')
+      .replace(/[şŞ]/g, 's')
+      .replace(/[çÇ]/g, 'c')
+      .replace(/[ğĞ]/g, 'g')
+      .replace(/\s+/g, ' ')
+      .trim();
 
   const selectedRoute = useMemo(() => routes.find((route) => route.id === routeId), [routeId, routes]);
   const stationOptions = useMemo(() => {
@@ -34,6 +49,38 @@ export function TripPlanner({ routes }: { routes: RouteItem[] }) {
       .filter((value, idx, arr) => arr.findIndex((candidate) => candidate.toLowerCase() === value.toLowerCase()) === idx);
   }, [selectedRoute]);
 
+  const dropoffOptions = useMemo(() => {
+    if (!stationOptions.length) return [];
+    const currentBoardingIdx = stationOptions.findIndex((item) => item.toLowerCase() === stop.trim().toLowerCase());
+    if (currentBoardingIdx >= 0) {
+      const forward = stationOptions.slice(currentBoardingIdx + 1).filter((item) => item.toLowerCase() !== stop.trim().toLowerCase());
+      if (forward.length) return forward;
+    }
+    return stationOptions.filter((item) => item.toLowerCase() !== stop.trim().toLowerCase());
+  }, [stationOptions, stop]);
+
+  const allStations = useMemo(() => {
+    const source = routes.flatMap((route) => [route.origin, route.destination, ...(Array.isArray(route.stops) ? route.stops : [])]);
+    return source
+      .map((item) => String(item || '').trim())
+      .filter(Boolean)
+      .filter((value, idx, arr) => arr.findIndex((candidate) => searchKey(candidate) === searchKey(value)) === idx);
+  }, [routes]);
+
+  const getStationSuggestions = (query: string) => {
+    const normalizedQuery = searchKey(query);
+    if (!normalizedQuery) return [];
+    return allStations
+      .filter((station) => {
+        const key = searchKey(station);
+        return key.startsWith(normalizedQuery) || key.split(' ').some((token) => token.startsWith(normalizedQuery));
+      })
+      .slice(0, 8);
+  };
+
+  const originSuggestions = useMemo(() => getStationSuggestions(origin), [origin, allStations]);
+  const destinationSuggestions = useMemo(() => getStationSuggestions(destination), [destination, allStations]);
+
   useEffect(() => {
     if (mode !== 'route' || !selectedRoute) return;
     if (!stationOptions.length) {
@@ -44,6 +91,16 @@ export function TripPlanner({ routes }: { routes: RouteItem[] }) {
     const hasCurrentStop = stationOptions.some((item) => item.toLowerCase() === stop.trim().toLowerCase());
     if (!hasCurrentStop) setStop(stationOptions[0]);
   }, [mode, selectedRoute, stationOptions, stop]);
+
+  useEffect(() => {
+    if (mode !== 'route') return;
+    if (!dropoffOptions.length) {
+      setDropoffStop('');
+      return;
+    }
+    const hasCurrentDropoff = dropoffOptions.some((item) => item.toLowerCase() === dropoffStop.trim().toLowerCase());
+    if (!hasCurrentDropoff) setDropoffStop(dropoffOptions[0]);
+  }, [mode, dropoffOptions, dropoffStop]);
 
   const getCurrentSchedule = () => {
     const now = new Date();
@@ -124,7 +181,7 @@ export function TripPlanner({ routes }: { routes: RouteItem[] }) {
       </div>
 
       {mode === 'route' ? (
-        <div className='grid gap-3 md:grid-cols-2'>
+        <div className='grid gap-3 md:grid-cols-3'>
           <div className='space-y-1'>
             <p className='text-overline'>Bus / Route</p>
             <select className='input-base' value={routeId} onChange={(e: any) => setRouteId(e.target.value)}>
@@ -136,7 +193,7 @@ export function TripPlanner({ routes }: { routes: RouteItem[] }) {
 
           <div className='space-y-1'>
             <p className='text-overline'>Boarding station (minəcəyin)</p>
-            <select className='input-base' value={stop} onChange={(e: any) => setStop(e.target.value)}>
+            <select className='input-base' value={stop} onChange={(e: any) => setStop(e.target.value)} disabled={!routeId}>
               {stationOptions.length ? (
                 stationOptions.map((station) => (
                   <option key={station} value={station}>{station}</option>
@@ -146,21 +203,89 @@ export function TripPlanner({ routes }: { routes: RouteItem[] }) {
               )}
             </select>
           </div>
+
+          <div className='space-y-1'>
+            <p className='text-overline'>Drop-off station (düşəcəyin)</p>
+            <select className='input-base' value={dropoffStop} onChange={(e: any) => setDropoffStop(e.target.value)} disabled={!routeId || !stop || !dropoffOptions.length}>
+              {dropoffOptions.length ? (
+                dropoffOptions.map((station) => (
+                  <option key={station} value={station}>{station}</option>
+                ))
+              ) : (
+                <option value=''>No drop-off stations</option>
+              )}
+            </select>
+          </div>
         </div>
       ) : (
         <div className='grid gap-3 md:grid-cols-2'>
-          <input className='input-base' value={origin} onChange={(e: any) => setOrigin(e.target.value)} placeholder='Hardan (məs: 28 MAY m/st)' />
-          <input className='input-base' value={destination} onChange={(e: any) => setDestination(e.target.value)} placeholder='Hara (məs: 20-ci Sahə)' />
+          <div className='relative'>
+            <input
+              className='input-base'
+              value={origin}
+              onChange={(e: any) => setOrigin(e.target.value)}
+              onFocus={() => setActiveSearchField('origin')}
+              onBlur={() => setTimeout(() => setActiveSearchField((current) => (current === 'origin' ? null : current)), 120)}
+              placeholder='Hardan (məs: Gənclik Mall)'
+            />
+            {activeSearchField === 'origin' && origin.trim() && originSuggestions.length ? (
+              <div className='relative z-40 mt-1 max-h-56 w-full overflow-auto rounded-lg border border-[color:var(--border-strong)] bg-[color:color-mix(in_srgb,var(--bg-alt)_96%,black)] p-1 shadow-[var(--shadow-glow)]'>
+                {originSuggestions.map((station) => (
+                  <button
+                    key={station}
+                    type='button'
+                    className='block w-full rounded-md bg-[var(--surface)] px-2 py-1.5 text-left text-sm text-[color:var(--text-soft)] hover:bg-[var(--surface-2)] hover:text-[color:var(--text)]'
+                    onMouseDown={(event) => {
+                      event.preventDefault();
+                      setOrigin(station);
+                      setActiveSearchField(null);
+                    }}
+                  >
+                    {station}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
+
+          <div className='relative'>
+            <input
+              className='input-base'
+              value={destination}
+              onChange={(e: any) => setDestination(e.target.value)}
+              onFocus={() => setActiveSearchField('destination')}
+              onBlur={() => setTimeout(() => setActiveSearchField((current) => (current === 'destination' ? null : current)), 120)}
+              placeholder='Hara (məs: TM 28 Mall)'
+            />
+            {activeSearchField === 'destination' && destination.trim() && destinationSuggestions.length ? (
+              <div className='relative z-40 mt-1 max-h-56 w-full overflow-auto rounded-lg border border-[color:var(--border-strong)] bg-[color:color-mix(in_srgb,var(--bg-alt)_96%,black)] p-1 shadow-[var(--shadow-glow)]'>
+                {destinationSuggestions.map((station) => (
+                  <button
+                    key={station}
+                    type='button'
+                    className='block w-full rounded-md bg-[var(--surface)] px-2 py-1.5 text-left text-sm text-[color:var(--text-soft)] hover:bg-[var(--surface-2)] hover:text-[color:var(--text)]'
+                    onMouseDown={(event) => {
+                      event.preventDefault();
+                      setDestination(station);
+                      setActiveSearchField(null);
+                    }}
+                  >
+                    {station}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
         </div>
       )}
 
-      {mode === 'route' && selectedRoute ? (
+      {mode === 'route' && selectedRoute && stop && dropoffStop ? (
         <div className='mt-4'>
           <RouteMapPreview
+            key={`${selectedRoute.id}:${stop}:${dropoffStop}`}
             from={stop}
-            to={selectedRoute.destination || selectedRoute.corridor || 'Destination'}
+            to={dropoffStop || selectedRoute.destination || selectedRoute.corridor || 'Destination'}
             routeName={selectedRoute.name}
-            routeId={selectedRoute.id}
           />
         </div>
       ) : null}
