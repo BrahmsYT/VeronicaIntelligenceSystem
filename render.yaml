@@ -5,8 +5,8 @@ services:
     rootDir: backend
     plan: free
     autoDeploy: true
-    buildCommand: npm install
-    startCommand: npx tsx src/server.ts
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: node dist/server.js
     envVars:
       - key: NODE_VERSION
         value: "20.18.0"
@@ -37,7 +37,7 @@ services:
     rootDir: frontend
     plan: free
     autoDeploy: true
-    buildCommand: npm install --include=dev && npm run build
+    buildCommand: npm ci --include=dev && npm run build
     startCommand: npm run start
     envVars:
       - key: NODE_VERSION
