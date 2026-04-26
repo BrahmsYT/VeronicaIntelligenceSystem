@@ -8,6 +8,8 @@ services:
     buildCommand: npm install
     startCommand: npx tsx src/server.ts
     envVars:
+      - key: NODE_VERSION
+        value: "20.18.0"
       - key: NODE_ENV
         value: production
       - key: JWT_SECRET
@@ -35,9 +37,11 @@ services:
     rootDir: frontend
     plan: free
     autoDeploy: true
-    buildCommand: npm install && npm run build
+    buildCommand: npm install --include=dev && npm run build
     startCommand: npm run start
     envVars:
+      - key: NODE_VERSION
+        value: "20.18.0"
       - key: NODE_ENV
         value: production
       - key: NEXT_PUBLIC_API_BASE_URL
