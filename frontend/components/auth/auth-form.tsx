@@ -123,7 +123,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
             <div className='relative'>
               <Mail className='pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--muted)]' />
               <input
-                className={`${inputClassName} pl-10`}
+                className={`${inputClassName} input-with-left-icon`}
                 placeholder='you@company.com'
                 type='email'
                 autoComplete='email'
@@ -137,7 +137,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
             <div className='relative'>
               <Lock className='pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--muted)]' />
               <input
-                className={`${inputClassName} pl-10 pr-12`}
+                className={`${inputClassName} input-with-left-icon input-with-right-icon`}
                 placeholder='••••••••'
                 type={showPassword ? 'text' : 'password'}
                 autoComplete={isRegister ? 'new-password' : 'current-password'}

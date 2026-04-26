@@ -374,6 +374,14 @@ a {
   transition: border-color 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
 }
 
+.input-with-left-icon {
+  padding-left: 2.35rem;
+}
+
+.input-with-right-icon {
+  padding-right: 2.7rem;
+}
+
 .input-base:where(select) {
   appearance: none;
   -webkit-appearance: none;

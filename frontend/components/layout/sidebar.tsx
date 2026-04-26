@@ -39,7 +39,7 @@ export function Sidebar() {
   }, {});
 
   return (
-    <aside className='hidden min-h-[calc(100vh-3rem)] w-72 flex-col gap-5 lg:flex'>
+    <aside className='hidden w-72 self-start flex-col gap-5 lg:sticky lg:top-6 lg:flex'>
       {/* Brand block */}
       <Link href='/' className='flex items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] px-4 py-3'>
         <span className='flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-strong)] bg-[var(--surface-2)]'>
@@ -66,7 +66,7 @@ export function Sidebar() {
       </div>
 
       {/* Nav */}
-      <nav className='flex-1 space-y-5'>
+      <nav className='space-y-5'>
         {Object.entries(grouped).map(([group, items]) => (
           <div key={group} className='space-y-1.5'>
             <p className='px-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-[color:var(--text-faint)]'>{group}</p>
